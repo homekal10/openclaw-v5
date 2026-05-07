@@ -1,0 +1,32 @@
+{
+  "totalSignals": 39,
+  "sentToTelegram": 39,
+  "watchlist": 0,
+  "byAsset": {
+    "OIL": 17,
+    "XAUUSD": 9,
+    "COFFEE": 5,
+    "BTCUSD": 6,
+    "NAS100": 2
+  },
+  "bySource": {
+    "Reuters": 1,
+    "Benzinga": 2,
+    "Rwanda Finance": 5,
+    "Mining Technology": 1,
+    "FXStreet": 3,
+    "CNBC": 5,
+    "MarketWatch": 4,
+    "Yahoo Finance": 10,
+    "24/7 Wall St.": 1,
+    "Poets & Quants": 1,
+    "MarketBeat": 1,
+    "Motley Fool": 1,
+    "Business Wire": 1,
+    "Associated Press": 1,
+    "Euronews": 1,
+    "TMX Newsfile": 1
+  },
+  "winRate": null,
+  "lastSignalAt": "2026-05-06T19:19:46.164Z"
+}

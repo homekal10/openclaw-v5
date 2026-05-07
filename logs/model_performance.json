@@ -1,0 +1,50 @@
+{
+  "deepseek_reasoner": {
+    "calls": 33,
+    "successes": 0,
+    "totalMs": 61927,
+    "avgMs": 1877,
+    "rate": 0,
+    "lastUsed": "2026-05-06T22:01:04.467Z"
+  },
+  "grok": {
+    "calls": 82,
+    "successes": 0,
+    "totalMs": 236965,
+    "avgMs": 2890,
+    "rate": 0,
+    "lastUsed": "2026-05-06T22:01:05.527Z"
+  },
+  "gemini": {
+    "calls": 83,
+    "successes": 0,
+    "totalMs": 311221,
+    "avgMs": 3750,
+    "rate": 0,
+    "lastUsed": "2026-05-06T22:01:46.355Z"
+  },
+  "deepseek": {
+    "calls": 83,
+    "successes": 0,
+    "totalMs": 120837,
+    "avgMs": 1456,
+    "rate": 0,
+    "lastUsed": "2026-05-06T22:01:46.356Z"
+  },
+  "lmstudio": {
+    "calls": 82,
+    "successes": 0,
+    "totalMs": 4466762,
+    "avgMs": 54473,
+    "rate": 0,
+    "lastUsed": "2026-05-06T22:01:46.354Z"
+  },
+  "aicc": {
+    "calls": 190,
+    "successes": 109,
+    "totalMs": 1093246,
+    "avgMs": 5754,
+    "rate": 0.57,
+    "lastUsed": "2026-05-06T22:01:04.466Z"
+  }
+}

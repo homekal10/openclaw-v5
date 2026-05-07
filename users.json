@@ -1,0 +1,65 @@
+{
+  "adminId": "841491341",
+  "users": [
+    {
+      "id": "841491341",
+      "name": "Kaleb (Admin)",
+      "role": "admin",
+      "addedAt": "2026-04-16"
+    },
+    {
+      "id": "367523136",
+      "name": "Henywalker",
+      "role": "user",
+      "addedAt": "2026-04-17"
+    },
+    {
+      "username": "robelamare",
+      "name": "Robel",
+      "role": "user",
+      "addedAt": "2026-04-18",
+      "id": "7301336718"
+    },
+    {
+      "username": "sebaoj",
+      "name": "Seba",
+      "role": "user",
+      "addedAt": "2026-04-18",
+      "id": "5025939944"
+    },
+    {
+      "username": "NathYTefera",
+      "name": "User",
+      "role": "user",
+      "addedAt": "2026-04-20",
+      "id": "584251332"
+    },
+    {
+      "username": "NakedAttitude1",
+      "name": "User",
+      "role": "user",
+      "addedAt": "2026-04-20"
+    },
+    {
+      "username": "Emmanuel_ami",
+      "name": "User",
+      "role": "user",
+      "addedAt": "2026-04-24",
+      "id": "391705973"
+    },
+    {
+      "username": "dannzii12",
+      "name": "User",
+      "role": "user",
+      "addedAt": "2026-04-27",
+      "id": "8755868576"
+    },
+    {
+      "username": "kwendim",
+      "name": "User",
+      "role": "user",
+      "addedAt": "2026-04-29",
+      "id": "348246479"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+headersOrigin = "config"
+plugins = []
+
+[functions]
+
+[functions."*"]
+
+[build]
+publish = "C:\\Users\\Homekal\\.antigravity\\extensions\\OpenClaw\\deploy"
+publishOrigin = "config"
+commandOrigin = "config"
+command = "node deploy.cjs"
+
+[build.environment]
+NODE_VERSION = "20"
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[[headers]]
+for = "/*"
+
+[headers.values]
+Access-Control-Allow-Origin = "*"
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
+Cache-Control = "public, max-age=60"
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]

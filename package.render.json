@@ -1,0 +1,19 @@
+{
+  "name": "openclaw-v5",
+  "version": "5.0.0",
+  "description": "OpenClaw v5.0 Institutional Alpha Trading Intelligence Engine",
+  "main": "server.cjs",
+  "scripts": {
+    "start": "node server.cjs",
+    "health": "curl -s http://localhost:${PORT:-3737}/health"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "node-telegram-bot-api": "^0.66.0",
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}

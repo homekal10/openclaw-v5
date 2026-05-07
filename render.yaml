@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: openclaw-v5
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm install --production
+    startCommand: node server.cjs
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      - key: DASHBOARD_PORT
+        value: "10000"
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: ADMIN_USER_ID
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: XAI_API_KEY
+        sync: false
+      - key: COINAPI_KEY
+        sync: false
+      - key: BINANCE_API_KEY
+        sync: false
+      - key: AICC_API_KEY
+        sync: false
+      - key: MASSIVE_API_KEY
+        sync: false
+      - key: REMORA_API_KEY
+        sync: false
+      - key: BOT_INGEST_SECRET
+        sync: false

@@ -1,0 +1,124 @@
+{
+  "last_updated": "2026-04-25",
+  "owner": {
+    "name": "Kaleb Alemayehu",
+    "role": "AI Systems Builder & Startup Architect",
+    "location": "Ethiopia",
+    "identity": "Digital entrepreneur building AI automation systems, trading tools, and scalable startup architectures"
+  },
+  "projects": {
+    "OpenClaw": {
+      "type": "AI Institutional Trading Intelligence Platform",
+      "version": "3.0.0 Expert Edition",
+      "description": "Institutional-grade trading intelligence system with 8-layer scoring, 13-gate verification, regime-aware pattern detection, self-healing health monitor, and native Node.js multi-agent pipeline",
+      "path": "C:\\Users\\Homekal\\.antigravity\\extensions\\OpenClaw",
+      "stack": ["Node.js", "LM Studio", "Grok xAI", "DeepSeek", "Gemini", "Puter Grok", "Telegram Bot API"],
+      "modules": [
+        "telegram_bot.cjs - Main Telegram interface (45+ commands)",
+        "ai_core.cjs - Multi-provider AI (5 LLMs with adaptive routing)",
+        "trading_engine.cjs - Signal generation orchestrator",
+        "strategy_engine.cjs - Professional indicators (ATR, ADX, MACD, RSI, VWAP, BB)",
+        "smart_health.cjs - Self-healing health monitor with anomaly detection",
+        "auto_update.cjs - Self-updating agent with rollback",
+        "api_counter.cjs - Smart API quota tracking with prediction",
+        "lib/agents/pattern-detector.cjs - ICT pattern engine + regime classifier",
+        "lib/orchestration/orchestrator.cjs - 4-agent pipeline coordinator",
+        "lib/scoring/scoring-engine.cjs - 8-layer scoring (partial credit)",
+        "lib/scoring/veto-engine.cjs - Setup-specific veto system",
+        "lib/verification/signal_verifier.cjs - 13-gate signal verifier",
+        "lib/learning/weekly-review.cjs - Self-learning from trade history",
+        "lib/errors/error_classifier.cjs - Classified error system with run IDs",
+        "lib/providers/provider_registry.cjs - 28 providers (12 free + 16 paid placeholders)",
+        "model_router.cjs - Intelligent LLM router (5 providers, 7 task types)",
+        "tradingagents_bridge.cjs - Native Node.js multi-agent analysis",
+        "dashboard.cjs - Bloomberg-style web dashboard (18 API endpoints)"
+      ],
+      "commands": [
+        "/signal <SYMBOL> - 8-layer institutional signal",
+        "/analyze <SYMBOL> - 4-agent deep analysis",
+        "/regime <SYMBOL> - Market regime classification",
+        "/patterns <SYMBOL> - ICT pattern scan (FVG, sweep, structure)",
+        "/chart <SYMBOL> <mode> - 6 chart modes (candle, line, bb, vwap, rsi, strat)",
+        "/risk <SYMBOL> - Remora institutional risk score",
+        "/health - Smart health monitor + anomaly detection",
+        "/api-usage - API quota dashboard with predictions",
+        "/version - System version + features",
+        "/changelog - Recent system updates",
+        "/market - Asset regime snapshot",
+        "/daily - Session intelligence report",
+        "/journal - Trade journal + weekly learning"
+      ],
+      "ai_providers": {
+        "primary": "LM Studio local (phi-3.1-mini) — offline-first, always available",
+        "cloud_1": "DeepSeek API — reasoning champion, free tier",
+        "cloud_2": "Google Gemini — fast, multimodal, free tier",
+        "cloud_3": "Puter Grok — free unlimited",
+        "cloud_4": "Grok xAI direct — cloud, fast",
+        "routing": "Adaptive model router with performance tracking + fallback chain"
+      },
+      "data_sources": {
+        "crypto": "Binance public API + CoinGecko + CoinAPI",
+        "gold_metals": "Yahoo Finance GC=F (Gold Futures)",
+        "forex": "Yahoo Finance EURUSD=X etc.",
+        "news": "RSS + Reddit + CoinGecko trending",
+        "risk": "Remora Risk Engine + Massive API"
+      }
+    },
+    "TradingAgents": {
+      "type": "Multi-Agent Trading Framework",
+      "description": "Python-based multi-agent LLM trading framework. Deploys analyst, researcher, trader, and risk management agents.",
+      "path": "C:\\Users\\Homekal\\.antigravity\\extensions\\TradingAgents-main",
+      "stack": ["Python", "LangGraph", "Grok xAI", "yfinance", "Alpha Vantage"],
+      "config": {
+        "llm_provider": "xai",
+        "deep_think_llm": "grok-3-fast",
+        "quick_think_llm": "grok-3-fast",
+        "data_vendor": "yfinance",
+        "max_debate_rounds": 1
+      },
+      "agents": [
+        "Fundamentals Analyst",
+        "Sentiment Analyst",
+        "News Analyst",
+        "Technical Analyst",
+        "Bullish Researcher",
+        "Bearish Researcher",
+        "Trader Agent",
+        "Risk Manager",
+        "Portfolio Manager"
+      ]
+    },
+    "AtlasTradingBot": {
+      "type": "Python Trading Bot",
+      "description": "Expert trading bot with multi-agent signals, CoinGecko API fallback, and real-time dashboard",
+      "stack": ["Python", "Expert Engine", "CoinGecko API", "Telegram Notifications"]
+    },
+    "GlowFoods": {
+      "type": "Corporate Website",
+      "description": "Ethiopia's first domestic food supplement manufacturer. Brand website with AI assistant, product carousel.",
+      "stack": ["React", "Framer Motion", "Next.js"],
+      "contact": "GlowFoodsEth@hotmail.com | +251910210289"
+    },
+    "MedaGarage": {
+      "type": "Driver App",
+      "description": "Driver dashboard with AI assistant component supporting English and Amharic",
+      "stack": ["React Native", "AI Assistant"]
+    }
+  },
+  "preferences": {
+    "ai_style": "Expert-level, strategic, actionable — no fluff",
+    "code_style": "Modular, clean, well-commented Node.js/Python",
+    "tool_philosophy": "Free/open-source first. Local LLMs when possible. Grok xAI for high-quality reasoning.",
+    "trading_philosophy": "Rules-based only. R:R >= 1:2. Never overtrade. Analysis only, no execution.",
+    "languages": ["Node.js", "Python", "JavaScript", "React"],
+    "no_paid_apis": "Avoid OpenAI, Anthropic paid tiers by default. Prefer Grok xAI (provided key) or local models."
+  },
+  "api_keys": {
+    "grok_xai": "xai-hjyVrdJOlmbUOe7yBLL3gKZToLkDRGtmtmPikK1hYfAzzLPQ9UirIn2Wb0MDkGy0xOz8ynnwYjn4elA7",
+    "note": "This key is active. Use for Grok API at https://api.x.ai/v1"
+  },
+  "system_architecture": {
+    "diagram": "Telegram → telegram_bot.cjs → [trading_engine | social_engine | ai_core] → [Grok xAI | LM Studio | TradingAgents]",
+    "data_flow": "User command → Route detection → Appropriate engine → AI reasoning → Formatted response → Telegram"
+  }
+}

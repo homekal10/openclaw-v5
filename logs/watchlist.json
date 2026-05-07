@@ -1,0 +1,20 @@
+[
+  {
+    "key": "367523136-XAUUSD",
+    "chatId": "367523136",
+    "symbol": "XAUUSD",
+    "targetRR": 2,
+    "label": "",
+    "addedAt": "2026-05-06T14:47:09.983Z",
+    "alertedAt": "2026-05-07T08:48:22.914Z"
+  },
+  {
+    "key": "391705973-XAUUSD",
+    "chatId": "391705973",
+    "symbol": "XAUUSD",
+    "targetRR": 2,
+    "label": "",
+    "addedAt": "2026-05-06T21:55:04.899Z",
+    "alertedAt": "2026-05-07T08:48:25.472Z"
+  }
+]

@@ -1,0 +1,76 @@
+{
+  "_date": "2026-05-07",
+  "_month": 4,
+  "snapshot_store": {
+    "hourly": 311,
+    "daily": 311,
+    "monthly": 1403,
+    "total": 1403,
+    "errors": 0,
+    "avgLatency": 0,
+    "lastCall": "2026-05-07T13:15:40.322Z",
+    "lastError": null,
+    "lastSuccess": "2026-05-07T13:15:40.322Z",
+    "cache_hits": 1403,
+    "cache_misses": 0,
+    "fallback_calls": 0,
+    "failed_calls": 0,
+    "callers": {
+      "snapshot_store": 1403
+    }
+  },
+  "coingecko": {
+    "hourly": 44,
+    "daily": 44,
+    "monthly": 254,
+    "total": 254,
+    "errors": 232,
+    "avgLatency": 3705,
+    "lastCall": "2026-05-07T12:06:47.056Z",
+    "lastError": "2026-05-07T12:06:47.056Z",
+    "lastSuccess": "2026-05-06T21:58:43.371Z",
+    "cache_hits": 0,
+    "cache_misses": 0,
+    "fallback_calls": 0,
+    "failed_calls": 232,
+    "callers": {
+      "coingecko": 254
+    }
+  },
+  "lmstudio": {
+    "hourly": 0,
+    "daily": 0,
+    "monthly": 15,
+    "total": 15,
+    "errors": 0,
+    "avgLatency": 12256,
+    "lastCall": "2026-05-06T22:01:46.360Z",
+    "lastError": null,
+    "lastSuccess": "2026-05-06T22:01:46.360Z",
+    "cache_hits": 0,
+    "cache_misses": 0,
+    "fallback_calls": 0,
+    "failed_calls": 0,
+    "callers": {
+      "unknown": 15
+    }
+  },
+  "quickchart": {
+    "hourly": 0,
+    "daily": 0,
+    "monthly": 18,
+    "total": 18,
+    "errors": 0,
+    "avgLatency": 49,
+    "lastCall": "2026-05-06T23:11:27.580Z",
+    "lastError": null,
+    "lastSuccess": "2026-05-06T23:11:27.580Z",
+    "cache_hits": 6,
+    "cache_misses": 0,
+    "fallback_calls": 6,
+    "failed_calls": 0,
+    "callers": {
+      "test_runner": 18
+    }
+  }
+}

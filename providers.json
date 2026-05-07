@@ -1,0 +1,7 @@
+{
+  "coinapi": { "tier": "free", "endpoint": "https://rest.coinapi.io", "apiKey": "YOUR_COINAPI_KEY" },
+  "coingecko": { "tier": "free", "endpoint": "https://api.coingecko.com/api/v3", "apiKey": null },
+  "deepseek": { "tier": "free", "endpoint": "https://api.deepseek.com", "apiKey": "YOUR_DEEPSEEK_KEY" },
+  "gemini": { "tier": "free", "endpoint": "https://generativelanguage.googleapis.com/v1beta2", "apiKey": "YOUR_GEMINI_KEY" },
+  "lm_studio": { "tier": "local", "endpoint": "http://localhost:1234/v1", "apiKey": null }
+}

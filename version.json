@@ -1,0 +1,28 @@
+{
+  "version": "5.1.0",
+  "codename": "Institutional Alpha",
+  "buildDate": "2026-05-04T00:00:00Z",
+  "lastUpdate": null,
+  "updateCount": 0,
+  "pendingUpdates": [],
+  "appliedUpdates": [],
+  "rollbackAvailable": false,
+  "features": [
+    "8-layer institutional scoring engine",
+    "13-gate signal verifier",
+    "Setup-specific veto engine (v2.5)",
+    "6-mode chart engine (candle, line, bb, vwap, rsi, strat)",
+    "5-agent native Node.js analysis pipeline",
+    "Remora Risk Engine + Massive API",
+    "Smart Health Monitor with self-healing + temporal learning",
+    "Expert Pattern Detector (ICT + SMC + Wyckoff)",
+    "Auto-Update Agent with rollback + repo watcher",
+    "Smart API Counter with predictive throttling",
+    "Market regime classifier + dynamic strategy router",
+    "5 LLM providers with adaptive routing",
+    "Continuous Background Reasoning Engine (10min cycle)",
+    "Critical Reasoning on-demand trigger",
+    "Semantic News Scoring via LLM",
+    "Provider abstraction (providers.json) for paid-tier readiness"
+  ]
+}

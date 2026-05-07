@@ -1,0 +1,30 @@
+[
+  {
+    "asset": "BTC",
+    "outcome": "loss",
+    "actual_rr": null,
+    "notes": "0",
+    "tracked_at": "2026-05-03T20:45:57.932Z"
+  },
+  {
+    "asset": "XAUUSD",
+    "outcome": "win",
+    "actual_rr": 2.1,
+    "notes": null,
+    "tracked_at": "2026-05-03T20:46:18.789Z"
+  },
+  {
+    "asset": "EURUSD",
+    "outcome": "scratch",
+    "actual_rr": null,
+    "notes": null,
+    "tracked_at": "2026-05-03T20:46:36.363Z"
+  },
+  {
+    "asset": "XAUUSD",
+    "outcome": "win",
+    "actual_rr": 2.1,
+    "notes": null,
+    "tracked_at": "2026-05-06T21:28:03.645Z"
+  }
+]
