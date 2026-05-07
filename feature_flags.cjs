@@ -1,5 +1,5 @@
 /**
- * feature_flags.cjs — OpenClaw Feature Flag Management v3.0
+ * feature_flags.cjs — OpenClaw Feature Flag Management v5.1
  * Controls which features are enabled/disabled system-wide.
  */
 'use strict';

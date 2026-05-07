@@ -309,7 +309,7 @@ const HTML = `<!DOCTYPE html>
 <header>
   <div class="live-dot"></div>
   <h1>🔭 OpenClaw v5.1 Institutional Alpha</h1>
-  <span class="badge">EXPERT EDITION</span>
+  <span class="badge">INSTITUTIONAL ALPHA</span>
   <span class="badge" style="color:var(--gold);border-color:var(--gold)">8-Layer Scoring</span>
   <select class="tz-select" id="tz-select" onchange="updateTimezone()">
     <option value="UTC">UTC</option><option value="EAT">EAT +3</option><option value="EST">EST -5</option><option value="GMT">London</option><option value="CET">CET +1</option><option value="JST">JST +9</option>
@@ -1775,12 +1775,12 @@ app.get('/api/system', (req, res) => {
             rss:       Math.round(mem.rss       / 1024 / 1024) + 'MB'
         },
         node_version: process.version,
-        phases_complete: ['Phase 1: Safety', 'Phase 2: Observability', 'Phase 3: Learning', 'Phase 4: Providers', 'Phase 5: Expert v3.0'],
+        phases_complete: ['Phase 1: Safety', 'Phase 2: Observability', 'Phase 3: Learning', 'Phase 4: Providers', 'Phase 5: v5.1 Institutional'],
         timestamp: new Date().toISOString()
     });
 });
 
-// ─── v3.0 Expert System API Endpoints ─────────────────────────────────────────
+// ─── v5.1 Expert System API Endpoints ─────────────────────────────────────────
 
 app.get('/api/health/smart', (req, res) => {
     try {

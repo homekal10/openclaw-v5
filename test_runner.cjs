@@ -1356,7 +1356,7 @@ async function testVersionConsistencyV40() {
 
         var dashSrc = require('fs').readFileSync(require('path').join(__dirname, 'dashboard.cjs'), 'utf8');
         dashSrc.includes('v4.0') ? ok('dashboard: has v4.0 label') : fail('version dashboard', 'missing v4.0');
-        dashSrc.includes('EXPERT EDITION') ? ok('dashboard: EXPERT EDITION badge') : fail('version badge', 'missing');
+        dashSrc.includes('INSTITUTIONAL ALPHA') ? ok('dashboard: INSTITUTIONAL ALPHA badge') : fail('version badge', 'missing');
 
         var healthSrc = require('fs').readFileSync(require('path').join(__dirname, 'smart_health.cjs'), 'utf8');
         healthSrc.includes('v4.0') ? ok('smart_health: has v4.0 label') : fail('version health', 'missing v4.0');
