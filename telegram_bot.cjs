@@ -225,6 +225,25 @@ function isDuplicate(msgId) {
     return false;
 }
 
+// v5.2: Per-user command execution lock — same user + same command + same args within 5s = ignore
+const _commandLocks = new Map(); // key -> timestamp
+const COMMAND_LOCK_MS = 5000;
+function isCommandLocked(chatId, cmdText) {
+    const key = `${chatId}:${cmdText.toLowerCase().trim()}`;
+    const now = Date.now();
+    // Clean expired locks
+    if (_commandLocks.size > 200) {
+        for (const [k, ts] of _commandLocks) {
+            if (now - ts > COMMAND_LOCK_MS) _commandLocks.delete(k);
+        }
+    }
+    if (_commandLocks.has(key) && (now - _commandLocks.get(key)) < COMMAND_LOCK_MS) {
+        return true; // duplicate within 5s
+    }
+    _commandLocks.set(key, now);
+    return false;
+}
+
 // ─── ROUTER ───────────────────────────────────────────────────────────────────
 bot.on('message', msg => {
     // DEDUP: drop if we already processed this message_id
@@ -334,6 +353,11 @@ function getHelpText() {
 
 // ─── COMMANDS ─────────────────────────────────────────────────────────────────
 async function handleCommand(chatId, cmdText, callerUsername = '') {
+    // v5.2: Command execution lock — prevent duplicate replies
+    if (isCommandLocked(chatId, cmdText)) {
+        writeLog(`[CMDLOCK] Suppressed duplicate: [${chatId}] ${cmdText}`);
+        return;
+    }
     writeLog(`[${chatId}] ${cmdText}`);
     const parts = cmdText.trim().split(/\s+/);
     const cmd   = parts[0].toLowerCase();
@@ -550,7 +574,7 @@ async function handleCommand(chatId, cmdText, callerUsername = '') {
             rsi:    'RSI(14) + MACD Momentum Panel',
             strat:  'Full Strategy Panel (EMA + RSI + MACD + Volume)',
         };
-        if (mode === 'help') {
+        if (sym.toLowerCase() === 'help' || mode === 'help') {
             const modeList = Object.entries(CHART_MODES).map(([k,v]) => `• \`${k}\` — ${v}`).join('\n');
             send(chatId, `📈 *Chart Modes*\n\n${modeList}\n\nUsage: /chart XAUUSD [mode]`, { parse_mode: 'Markdown' });
             return;

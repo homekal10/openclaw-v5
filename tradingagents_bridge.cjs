@@ -145,17 +145,20 @@ async function runAgentAnalysis(ticker, date = null, priceData = null) {
         if (fgSnap) { fearGreedData = fgSnap.payload; sourceSnapshotsUsed.push('FEARGREED'); if (fgSnap.stale) staleInputs.push('FEARGREED'); }
     } catch {}
 
-    // Helper: extract text + metadata
+    // Helper: extract text + metadata (v5.2: null-output guard)
     const extractResult = (settled, agentName, fallback) => {
         const run = { agent: agentName, model: 'unknown', latency_ms: 0, success: false };
         if (settled.status === 'fulfilled') {
             const val = settled.value;
-            run.success = true;
             run.model = val?.model || 'unknown';
             run.latency_ms = val?.latencyMs || 0;
-            if (typeof val === 'string') return { text: val, run };
-            if (val && typeof val === 'object' && val.text) return { text: val.text, run };
-            if (val && typeof val === 'object') return { text: JSON.stringify(val), run };
+            // v5.2: Guard against null/empty text — never expose raw JSON to user
+            if (typeof val === 'string' && val.trim()) { run.success = true; return { text: val, run }; }
+            if (val && typeof val === 'object' && val.text && typeof val.text === 'string' && val.text.trim()) { run.success = true; return { text: val.text, run }; }
+            // null, empty, or text:null — treat as failure
+            run.success = false;
+            run.error = 'Agent returned null/empty output';
+            return { text: fallback, run };
         }
         run.error = settled.reason?.message || 'unknown';
         return { text: fallback, run };
@@ -178,6 +181,8 @@ async function runAgentAnalysis(ticker, date = null, priceData = null) {
     const rsk  = extractResult(riskR, 'risk', '⚠️ Risk assessment unavailable.');
     agentRuns.push(tech.run, sent.run, nws.run, rsk.run);
 
+    // v5.2: Track missing agents for CIO synthesis
+    const missingAgents = agentRuns.filter(r => !r.success).map(r => r.agent);
     if (!tech.run.success) warnings.push('Technical agent failed');
     if (!sent.run.success) warnings.push('Sentiment agent failed');
     if (!nws.run.success) warnings.push('News agent failed');
@@ -198,6 +203,8 @@ async function runAgentAnalysis(ticker, date = null, priceData = null) {
 
     const successCount = agentRuns.filter(r => r.success).length;
     let confidence = Math.round(successCount / agentRuns.length * 100);
+    // v5.2: Reduce confidence by 15 per missing agent
+    if (missingAgents.length > 0) { confidence = Math.max(0, confidence - missingAgents.length * 15); }
     if (staleInputs.length > 0) { confidence = Math.max(0, confidence - staleInputs.length * 10); warnings.push('Stale inputs: ' + staleInputs.join(', ')); }
 
     // v4.0: Hard confidence cap — AI must never claim certainty

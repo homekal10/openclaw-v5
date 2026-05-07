@@ -642,7 +642,11 @@ var API_BASE = '';
   console.log('[OpenClaw] API Base:', API_BASE || '(same-origin)');
 })();
 function apiFetch(path, opts) {
-  return fetch(API_BASE + path, opts);
+  // v5.2: Global 8s timeout for all internal API calls — no infinite Loading
+  var controller = new AbortController();
+  var timeout = setTimeout(function() { controller.abort(); }, 8000);
+  var fetchOpts = Object.assign({}, opts || {}, { signal: controller.signal });
+  return fetch(API_BASE + path, fetchOpts).finally(function() { clearTimeout(timeout); });
 }
 
 // ── Dark/Light Mode Toggle ──
@@ -2453,7 +2457,74 @@ app.get('/api/v5/health-actions', (req, res) => {
     } catch(e) { res.json({ actions: [], error: e.message }); }
 });
 
+// ─── v5.2 API Endpoints ───────────────────────────────────────────────────────
 
+// Issue 3: Scheduler Health
+app.get('/api/v5/scheduler-health', (req, res) => {
+    try {
+        const { getSchedulerHealth } = require('./scheduler.cjs');
+        res.json({ jobs: getSchedulerHealth(), timestamp: new Date().toISOString() });
+    } catch(e) { res.json({ jobs: [], error: e.message }); }
+});
+
+// Issue 2: Signal Freshness
+app.get('/api/v5/signals-fresh', (req, res) => {
+    try {
+        const snapStore = require('./lib/snapshots/snapshot_store.cjs');
+        const allSignals = snapStore.getAll ? snapStore.getAll('SIGNAL') : [];
+        const now = Date.now();
+        const current = [], archived = [];
+        for (const s of allSignals) {
+            const ageMs = now - new Date(s.updated_at || s.created_at || 0).getTime();
+            const ageH = ageMs / (1000 * 60 * 60);
+            const entry = { ...s, age_hours: Math.round(ageH * 10) / 10 };
+            if (ageH < 2) current.push(entry);
+            else archived.push(entry);
+        }
+        res.json({
+            current, archived,
+            freshness_status: current.length > 0 ? 'FRESH' : 'STALE',
+            message: current.length === 0 ? 'No fresh signals — run /signal or wait for scheduler' : `${current.length} current signal(s)`,
+            timestamp: new Date().toISOString()
+        });
+    } catch(e) { res.json({ current: [], archived: [], freshness_status: 'ERROR', error: e.message }); }
+});
+
+// Issue 5: Truthful Provider OK Count
+app.get('/api/v5/providers-truth', (req, res) => {
+    try {
+        const { getAllWithStatus, getProviderErrorRate } = require('./lib/providers/provider_registry.cjs');
+        const all = getAllWithStatus();
+        const withRates = all.map(p => ({
+            ...p,
+            error_rate_pct: getProviderErrorRate ? getProviderErrorRate(p.name) : 0
+        }));
+        const healthy = withRates.filter(p => p.computed_status === 'HEALTHY').length;
+        const total = withRates.length;
+        res.json({
+            providers: withRates,
+            summary: { total, healthy_ok: healthy, degraded: withRates.filter(p => p.computed_status === 'DEGRADED').length, failing: withRates.filter(p => p.computed_status === 'FAILING').length, disabled: withRates.filter(p => p.computed_status === 'DISABLED').length },
+            timestamp: new Date().toISOString()
+        });
+    } catch(e) { res.json({ providers: [], error: e.message }); }
+});
+
+// Issue 12: Paid-Provider Readiness Map
+app.get('/api/v5/paid-readiness', (req, res) => {
+    try {
+        const { PAID_PLACEHOLDERS } = require('./lib/providers/provider_registry.cjs');
+        const readiness = PAID_PLACEHOLDERS.map(p => ({
+            name: p.name,
+            type: p.type,
+            env_flag: p.envFlag,
+            env_set: !!process.env[p.envFlag],
+            cost_hint: p.costHint,
+            status: 'DISABLED',
+            badge: process.env[p.envFlag] ? 'Ready but disabled' : 'Not configured'
+        }));
+        res.json({ providers: readiness, timestamp: new Date().toISOString() });
+    } catch(e) { res.json({ providers: [], error: e.message }); }
+});
 
 let server = null;
 function startDashboard() {

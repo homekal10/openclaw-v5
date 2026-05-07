@@ -384,8 +384,8 @@ function watchRepoForUpdates(intervalMs = 5 * 60 * 1000) {
     }, intervalMs);
 }
 
-// ─── v5.1: Forbidden API Scanner for Code Proposals ─────────────────────────
-const FORBIDDEN_APIS = ['require(', 'eval(', 'new Function', 'child_process', 'process.exit', 'process.env', 'fs.', 'fs '];
+// ─── v5.1/v5.2: Forbidden API Scanner for Code Proposals ─────────────────────
+const FORBIDDEN_APIS = ['require(', 'eval(', 'new Function', 'child_process', 'process.exit', 'process.env', 'fs.', 'fetch(', 'XMLHttpRequest', 'http.request', 'https.request', 'net.', 'dgram.', 'tls.', 'import('];
 const FORBIDDEN_PATTERNS = [
     /\brequire\s*\(/g,
     /\beval\s*\(/g,
@@ -397,7 +397,11 @@ const FORBIDDEN_PATTERNS = [
     /\bfetch\s*\(/g,
     /XMLHttpRequest/g,
     /http\.request/g,
-    /https\.request/g
+    /https\.request/g,
+    /\bnet\s*\.\s*(connect|createServer|createConnection|Socket)/g,
+    /\bdgram\s*\.\s*(createSocket)/g,
+    /\btls\s*\.\s*(connect|createServer)/g,
+    /\bimport\s*\(/g
 ];
 
 function scanForForbiddenAPIs(code) {

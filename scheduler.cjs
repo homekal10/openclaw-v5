@@ -145,11 +145,19 @@ function getRefreshCircuitStatus() {
 
 const _circuitBreakers = {};  // { provider: { failures: N, pausedUntil: timestamp } }
 
+// v5.2: Per-job failure tracking and degraded state
+const _jobFailures = {}; // { jobName: { consecutive: N, totalFailures: N, lastFailureAt: ts, degradedUntil: ts } }
+
 function withTimeout(fn, jobName) {
     return async function() {
         // Overlap guard
         if (_jobLocks[jobName]) {
             log(`[SKIP] ${jobName} still running — overlap prevented`);
+            return;
+        }
+        // v5.2: Degraded state — skip if paused
+        if (_jobFailures[jobName]?.degradedUntil && Date.now() < _jobFailures[jobName].degradedUntil) {
+            log(`[DEGRADED] ${jobName} paused until ${new Date(_jobFailures[jobName].degradedUntil).toISOString()}`);
             return;
         }
         _jobLocks[jobName] = true;
@@ -164,17 +172,48 @@ function withTimeout(fn, jobName) {
             if (elapsed > SLOW_JOB_WARN_MS) {
                 log(`[SLOW] ${jobName} took ${elapsed}ms (threshold: ${SLOW_JOB_WARN_MS}ms)`);
             }
+            // v5.2: Reset failure counter on success
+            if (_jobFailures[jobName]) { _jobFailures[jobName].consecutive = 0; }
             return result;
         } catch(e) {
+            // v5.2: Track failure
+            if (!_jobFailures[jobName]) _jobFailures[jobName] = { consecutive: 0, totalFailures: 0, lastFailureAt: null, degradedUntil: null };
+            _jobFailures[jobName].consecutive++;
+            _jobFailures[jobName].totalFailures++;
+            _jobFailures[jobName].lastFailureAt = Date.now();
+            if (_jobFailures[jobName].consecutive >= 3) {
+                _jobFailures[jobName].degradedUntil = Date.now() + 10 * 60 * 1000; // 10 min pause
+                log(`[DEGRADED] ${jobName} failed ${_jobFailures[jobName].consecutive}x consecutively — pausing 10min`);
+            }
             if (e.message === 'JOB_TIMEOUT') {
                 log(`[TIMEOUT] ${jobName} exceeded ${JOB_TIMEOUT_MS}ms — aborted safely`);
             } else {
-                throw e;
+                log(`[ERROR] ${jobName}: ${e.message}`);
             }
         } finally {
             _jobLocks[jobName] = false;
         }
     };
+}
+
+// v5.2: Scheduler health summary
+function getSchedulerHealth() {
+    const jobs = ['headline_collector', 'signal_engine', 'realtime_scanner', 'daily_report'];
+    return jobs.map(name => {
+        const f = _jobFailures[name] || { consecutive: 0, totalFailures: 0, lastFailureAt: null, degradedUntil: null };
+        let status = 'HEALTHY';
+        if (f.degradedUntil && Date.now() < f.degradedUntil) status = 'DEGRADED';
+        else if (f.consecutive >= 2) status = 'SLOW';
+        return {
+            job: name,
+            status,
+            running: !!_jobLocks[name],
+            consecutive_failures: f.consecutive,
+            total_failures: f.totalFailures,
+            last_failure: f.lastFailureAt ? new Date(f.lastFailureAt).toISOString() : null,
+            degraded_until: f.degradedUntil ? new Date(f.degradedUntil).toISOString() : null
+        };
+    });
 }
 
 function checkCircuitBreaker(provider) {
@@ -433,4 +472,4 @@ function stop() {
     log('Scheduler stopped');
 }
 
-module.exports = { init, stop, runSignalEngine, runHeadlineCollector, withTimeout, checkCircuitBreaker, recordProviderFailure, canRefreshSnapshot, recordRefreshAttempt, getRefreshCircuitStatus, _jobLocks, _circuitBreakers, _refreshAttempts };
+module.exports = { init, stop, runSignalEngine, runHeadlineCollector, withTimeout, checkCircuitBreaker, recordProviderFailure, canRefreshSnapshot, recordRefreshAttempt, getRefreshCircuitStatus, getSchedulerHealth, _jobLocks, _jobFailures, _circuitBreakers, _refreshAttempts };

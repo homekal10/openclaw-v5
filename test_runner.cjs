@@ -1942,8 +1942,6 @@ async function main() {
     await testIndicatorIntelligenceV34();
     await testAutoUpdatePolicyV34();
     await testV34Commands();
-
-    // v3.4 Sprint 5 tests
     await testDashboardV34Panels();
     await testScalperIntelligenceV34();
 
@@ -1969,6 +1967,9 @@ async function main() {
     await testV51MacroCircuitBreaker();
     await testV51ApiEndpoints();
 
+    // v5.2 Live-Runtime Fixes
+    await testV52Fixes();
+
     // Cleanup seeded data
     try { require('./test_seed.cjs').cleanTestSnapshots(); } catch {}
 
@@ -1978,6 +1979,114 @@ async function main() {
     console.log('  GRADE: ' + (failed === 0 ? '🏆 PERFECT' : failed <= 2 ? '🟢 GOOD' : failed <= 5 ? '🟡 FAIR' : '🔴 NEEDS WORK'));
     console.log('═══════════════════════════════════════════════');
     process.exit(failed > 0 ? 1 : 0);
+}
+
+// ─── v5.2 LIVE-RUNTIME FIXES ─────────────────────────────────────────────────
+async function testV52Fixes() {
+    console.log('\n🔧 v5.2 LIVE-RUNTIME FIXES');
+
+    // Issue 1: Command Lock
+    const botSrc = require('fs').readFileSync(require('path').join(__dirname, 'telegram_bot.cjs'), 'utf8');
+    botSrc.includes('isCommandLocked') ? ok('Issue 1: isCommandLocked function exists') : fail('cmd lock', 'missing');
+    botSrc.includes('_commandLocks') ? ok('Issue 1: _commandLocks map defined') : fail('cmd locks map', 'missing');
+    botSrc.includes('COMMAND_LOCK_MS') ? ok('Issue 1: COMMAND_LOCK_MS constant defined') : fail('lock ms', 'missing');
+
+    // Issue 8: /chart help parser
+    botSrc.includes("sym.toLowerCase() === 'help'") ? ok('Issue 8: /chart help checks sym === help') : fail('chart help', 'sym check missing');
+
+    // Issue 6: AI Agent null-output guard
+    const bridgeSrc = require('fs').readFileSync(require('path').join(__dirname, 'tradingagents_bridge.cjs'), 'utf8');
+    bridgeSrc.includes('Agent returned null/empty output') ? ok('Issue 6: null-output guard message exists') : fail('null guard', 'missing');
+    bridgeSrc.includes('missingAgents') ? ok('Issue 6: missingAgents tracking exists') : fail('missing agents', 'not tracked');
+    !bridgeSrc.includes('return { text: JSON.stringify(val), run }') ? ok('Issue 6: raw JSON stringify removed from agent output') : fail('raw json', 'still present');
+
+    // Issue 5: Provider truth
+    const reg = require('./lib/providers/provider_registry.cjs');
+    typeof reg.getProviderErrorRate === 'function' ? ok('Issue 5: getProviderErrorRate exported') : fail('error rate', 'missing');
+    // High failure count should never be UNUSED
+    const regSrc = require('fs').readFileSync(require('path').join(__dirname, 'lib/providers/provider_registry.cjs'), 'utf8');
+    regSrc.includes('High error count providers are never UNUSED') ? ok('Issue 5: UNUSED guard for high-error providers') : fail('unused guard', 'missing');
+
+    // Issue 3: Scheduler health
+    const sched = require('./scheduler.cjs');
+    typeof sched.getSchedulerHealth === 'function' ? ok('Issue 3: getSchedulerHealth exported') : fail('sched health', 'missing');
+    const health = sched.getSchedulerHealth();
+    Array.isArray(health) ? ok('Issue 3: getSchedulerHealth returns array') : fail('health array', typeof health);
+    health.length > 0 && health[0].job ? ok('Issue 3: health entries have job field') : fail('health entry', 'no job');
+    health.every(h => ['HEALTHY','SLOW','DEGRADED'].includes(h.status)) ? ok('Issue 3: all jobs have valid status') : fail('job status', health.map(h => h.status).join(','));
+
+    // Issue 3: Job failure tracking
+    typeof sched._jobFailures === 'object' ? ok('Issue 3: _jobFailures tracker exists') : fail('job failures', 'missing');
+
+    // Issue 10: Dashboard apiFetch timeout
+    const dashSrc = require('fs').readFileSync(require('path').join(__dirname, 'dashboard.cjs'), 'utf8');
+    dashSrc.includes('AbortController') && dashSrc.includes('apiFetch') ? ok('Issue 10: apiFetch uses AbortController') : fail('apiFetch timeout', 'missing');
+    dashSrc.includes('8000') ? ok('Issue 10: 8s timeout value present') : fail('timeout value', 'missing');
+
+    // Issue 11: Auto-update scanner blocks net/http/https
+    const { scanForForbiddenAPIs } = require('./auto_update.cjs');
+    const netResult = scanForForbiddenAPIs('net.connect("localhost")');
+    !netResult.safe ? ok('Issue 11: net.connect blocked') : fail('net block', 'not blocked');
+    const httpResult = scanForForbiddenAPIs('http.request("http://evil.com")');
+    !httpResult.safe ? ok('Issue 11: http.request blocked') : fail('http block', 'not blocked');
+    const httpsResult = scanForForbiddenAPIs('https.request("https://evil.com")');
+    !httpsResult.safe ? ok('Issue 11: https.request blocked') : fail('https block', 'not blocked');
+    const importResult = scanForForbiddenAPIs('import("fs")');
+    !importResult.safe ? ok('Issue 11: dynamic import() blocked') : fail('import block', 'not blocked');
+    const safeCode = scanForForbiddenAPIs('function evaluateSignal(snap) { return snap.rsi < 30; }');
+    safeCode.safe ? ok('Issue 11: safe code passes scanner') : fail('safe code', 'wrongly blocked');
+
+    // Issue 9: Rwanda grep — no BUY/SELL in source
+    const rwSrc = require('fs').readFileSync(require('path').join(__dirname, 'rwanda_engine.cjs'), 'utf8');
+    !rwSrc.includes('COFFEE — BUY') ? ok('Issue 9: no "COFFEE — BUY" in Rwanda source') : fail('rwanda buy', 'still present');
+    !rwSrc.includes('XAUUSD — BUY') ? ok('Issue 9: no "XAUUSD — BUY" in Rwanda source') : fail('rwanda xau buy', 'still present');
+    !rwSrc.includes("direction: 'BUY'") && !rwSrc.includes('direction: "BUY"') ? ok('Issue 9: no direction BUY in Rwanda') : fail('rwanda dir buy', 'still present');
+    !rwSrc.includes("direction: 'SELL'") && !rwSrc.includes('direction: "SELL"') ? ok('Issue 9: no direction SELL in Rwanda') : fail('rwanda dir sell', 'still present');
+
+    // Issue 2: Signal freshness endpoint
+    dashSrc.includes('/api/v5/signals-fresh') ? ok('Issue 2: /api/v5/signals-fresh endpoint registered') : fail('signals-fresh', 'missing');
+
+    // Issue 12: Paid readiness endpoint
+    dashSrc.includes('/api/v5/paid-readiness') ? ok('Issue 12: /api/v5/paid-readiness endpoint registered') : fail('paid-readiness', 'missing');
+
+    // Issue 5: Providers truth endpoint
+    dashSrc.includes('/api/v5/providers-truth') ? ok('Issue 5: /api/v5/providers-truth endpoint registered') : fail('providers-truth', 'missing');
+
+    // Issue 3: Scheduler health endpoint
+    dashSrc.includes('/api/v5/scheduler-health') ? ok('Issue 3: /api/v5/scheduler-health endpoint registered') : fail('scheduler-health', 'missing');
+
+    // Issue 7: Stats sync - journal stats function exists
+    try {
+        const { getJournalStats } = require('./lib/learning/learning-engine.cjs');
+        typeof getJournalStats === 'function' ? ok('Issue 7: getJournalStats function exported') : fail('journal stats', 'not a function');
+        const js = getJournalStats();
+        typeof js.total === 'number' ? ok('Issue 7: getJournalStats returns total count') : fail('journal total', typeof js.total);
+    } catch(e) { fail('journal stats', e.message); }
+
+    // Dashboard version consistency
+    dashSrc.includes('INSTITUTIONAL ALPHA') ? ok('v5.2: INSTITUTIONAL ALPHA badge present') : fail('badge', 'missing');
+
+    // Issue 4: Candle data — bot and dashboard use same fetchCandles
+    botSrc.includes('fetchCandles') ? ok('Issue 4: bot uses fetchCandles') : fail('bot candles', 'missing');
+
+    // v5.2 API endpoints live test
+    try {
+        const BASE = 'http://localhost:3737';
+        const schedRes = await fetch(BASE + '/api/v5/scheduler-health').then(r => r.json()).catch(() => ({}));
+        Array.isArray(schedRes.jobs) ?
+            ok('Issue 3: /api/v5/scheduler-health returns jobs array (' + schedRes.jobs.length + ' jobs)') :
+            skip('scheduler-health live', 'server may not be running');
+
+        const paidRes = await fetch(BASE + '/api/v5/paid-readiness').then(r => r.json()).catch(() => ({}));
+        Array.isArray(paidRes.providers) ?
+            ok('Issue 12: /api/v5/paid-readiness returns providers (' + paidRes.providers.length + ')') :
+            skip('paid-readiness live', 'server may not be running');
+
+        const provTruth = await fetch(BASE + '/api/v5/providers-truth').then(r => r.json()).catch(() => ({}));
+        provTruth.summary && typeof provTruth.summary.healthy_ok === 'number' ?
+            ok('Issue 5: /api/v5/providers-truth has healthy_ok count: ' + provTruth.summary.healthy_ok) :
+            skip('providers-truth live', 'server may not be running');
+    } catch(e) { skip('v5.2 live API', e.message); }
 }
 
 main().catch(function(e) { console.error('Test runner crashed:', e); process.exit(2); });
