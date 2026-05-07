@@ -2526,6 +2526,73 @@ app.get('/api/v5/paid-readiness', (req, res) => {
     } catch(e) { res.json({ providers: [], error: e.message }); }
 });
 
+// ─── Phase 14: Smart Health API ─────────────────────────────────────────────
+app.get('/api/v5/smart-health', (req, res) => {
+    try {
+        const sh = require('./smart_health.cjs');
+        const result = sh.runHealthCheck();
+        const v4Checks = {
+            confidenceCapViolation: sh.detectConfidenceCapViolation(),
+            staleRefreshLoop: sh.detectStaleRefreshLoop(),
+            newsFalsePositive: sh.detectNewsFalsePositive(),
+            schedulerTimeout: sh.detectSchedulerTimeout(),
+            dashboardSyncLag: sh.detectDashboardSyncLag(),
+            missingAnalysis: sh.detectMissingAnalysis(),
+            quotaExhaustion: sh.detectQuotaExhaustion(),
+            llmTimeout: sh.detectLLMTimeout()
+        };
+        res.json({
+            status: result.status,
+            snapshot: result.snapshot,
+            anomalies: result.anomalies,
+            warnings: result.warnings,
+            healingActions: result.healingActions,
+            detectors: v4Checks,
+            baselineMature: result.baselineMature,
+            timestamp: new Date().toISOString()
+        });
+    } catch(e) { res.json({ status: 'ERROR', error: e.message }); }
+});
+
+// ─── Phase 13: Learning Status API ──────────────────────────────────────────
+app.get('/api/v5/learning-status', (req, res) => {
+    try {
+        const le = require('./lib/learning/learning-engine.cjs');
+        const status = le.getLearningStatus();
+        const modelScore = le.getModelScore();
+        const journalStats = le.getJournalStats();
+        res.json({
+            learning: status,
+            modelScore,
+            journalStats,
+            timestamp: new Date().toISOString()
+        });
+    } catch(e) { res.json({ learning: null, error: e.message }); }
+});
+
+// ─── Phase 13: Model Score API ──────────────────────────────────────────────
+app.get('/api/v5/model-score', (req, res) => {
+    try {
+        const { getModelScore } = require('./lib/learning/learning-engine.cjs');
+        res.json(getModelScore());
+    } catch(e) { res.json({ score: 0, error: e.message }); }
+});
+
+// ─── Phase 13: Snapshot Sync Overview API ───────────────────────────────────
+app.get('/api/v5/snapshot-sync', (req, res) => {
+    try {
+        const snapStore = require('./lib/snapshots/snapshot_store.cjs');
+        const health = snapStore.getSyncHealth();
+        const storeStats = snapStore.stats();
+        res.json({
+            sync: health,
+            store: storeStats,
+            valid_types: snapStore.VALID_TYPES,
+            timestamp: new Date().toISOString()
+        });
+    } catch(e) { res.json({ sync: null, error: e.message }); }
+});
+
 let server = null;
 function startDashboard() {
     if (server) return;

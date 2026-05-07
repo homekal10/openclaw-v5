@@ -222,6 +222,54 @@ async function runAgentAnalysis(ticker, date = null, priceData = null) {
     }
 
 
+    // v5.2: AI Claim Filter — strip unsupported claims (Phase 7)
+    const UNSUPPORTED_CLAIM_PATTERNS = [
+        /retail\s+(position|sentiment|traders?\s+(are|have))/i,
+        /institutional\s+(flow|position|accumulation|buying|selling)/i,
+        /options?\s+(flow|expir|gamma|delta|put.call|call.put|open\s+interest)/i,
+        /derivatives?\s+(data|market|flow)/i,
+        /geopolitical\s+(escalation|tension|risk)\s+(is|has|will|could)/i,
+        /\b(CPI|NFP|FOMC|Fed\s+meeting)\s+(showed?|released?|came\s+in|printed|was)\b/i,
+        /central\s+bank\s+(said|stated|announced|decided)/i,
+        /social\s+media\s+(shows?|indicates?|suggests?)\s+\d+%/i,
+        /\d+%\s+of\s+(traders?|retail|institutional)/i,
+        /sector.specific\s+demand/i
+    ];
+
+    function filterUnsupportedClaims(text, availableSnapshots) {
+        if (!text || typeof text !== 'string') return { filtered: text || '', removed: [] };
+        const removed = [];
+        let filtered = text;
+        // Only filter claims when corresponding snapshots are missing
+        const hasMacro = availableSnapshots.includes('MACRO');
+        const hasNews = availableSnapshots.includes('NEWS');
+        const sentences = filtered.split(/(?<=[.!?\n])\s*/);
+        const kept = [];
+        for (const sentence of sentences) {
+            let shouldRemove = false;
+            for (const pattern of UNSUPPORTED_CLAIM_PATTERNS) {
+                if (pattern.test(sentence)) {
+                    // Allow macro/news claims only if we have corresponding snapshots
+                    if (/CPI|NFP|FOMC|central\s+bank/i.test(sentence) && hasMacro) continue;
+                    if (/geopolitical/i.test(sentence) && hasNews) continue;
+                    shouldRemove = true;
+                    removed.push(sentence.trim().substring(0, 80));
+                    break;
+                }
+            }
+            if (!shouldRemove) kept.push(sentence);
+        }
+        return { filtered: kept.join(' '), removed };
+    }
+
+    // Apply claim filter to synthesis
+    const synthFiltered = filterUnsupportedClaims(synthesis, sourceSnapshotsUsed);
+    if (synthFiltered.removed.length > 0) {
+        synthesis = synthFiltered.filtered;
+        warnings.push(`Removed ${synthFiltered.removed.length} unsupported claim(s)`);
+    }
+    const unsupportedClaimsRemoved = synthFiltered.removed;
+
     // Build & save AiAnalysisSnapshot
     const analysisSnapshot = {
         run_id: runId, symbol: sym, timestamp: new Date().toISOString(),
@@ -233,7 +281,8 @@ async function runAgentAnalysis(ticker, date = null, priceData = null) {
         final_action: 'ADVISORY', confidence,
         why_trade: 'See CIO synthesis', why_not_trade: warnings.length > 0 ? warnings.join('; ') : 'No issues',
         needed_confirmation: [], source_snapshots_used: sourceSnapshotsUsed,
-        stale_inputs: staleInputs, warnings, agent_runs: agentRuns,
+        stale_inputs: staleInputs, unsupported_claims_removed: unsupportedClaimsRemoved,
+        warnings, agent_runs: agentRuns,
         total_latency_ms: Date.now() - startMs
     };
 
@@ -317,8 +366,21 @@ async function startContinuousReasoningLoop() {
             const res = await callLLM([{ role: 'user', content: prompt }], 'REASONING_LOOP');
             
             if (res && res.text) {
+                // v5.2 Phase 11: Safety guard — strip any BUY/SELL/trade signal from background reasoning
+                let sanitizedThought = res.text;
+                const FORBIDDEN_REASONING_PATTERNS = [
+                    /\b(BUY|SELL|LONG|SHORT)\s+(NOW|IMMEDIATELY|AT\s+MARKET)/gi,
+                    /\bENTER\s+(LONG|SHORT|BUY|SELL)/gi,
+                    /\bTAKE\s+(PROFIT|POSITION)\s+AT/gi,
+                    /\bSTOP\s+LOSS\s+AT\s+\d/gi,
+                    /\bverified.active/gi
+                ];
+                for (const pat of FORBIDDEN_REASONING_PATTERNS) {
+                    sanitizedThought = sanitizedThought.replace(pat, '[REDACTED — not a trade signal]');
+                }
+
                 snapStore.put('BACKGROUND_REASONING', target, null, {
-                    thought: res.text,
+                    thought: sanitizedThought,
                     target,
                     model: res.model,
                     grounded: !!grounding,

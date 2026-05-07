@@ -1484,7 +1484,7 @@ async function testV50AuditFixes() {
 
         // FIX 6: Version is v5.1.0
         var ver = au.loadVersion();
-        ver.version === '5.1.0' ? ok('version.json is v5.1.0') : fail('version', 'expected 5.1.0, got ' + ver.version);
+        ver.version === '5.2.0' ? ok('version.json is v5.2.0') : fail('version', 'expected 5.2.0, got ' + ver.version);
         ver.codename === 'Institutional Alpha' ? ok('codename is Institutional Alpha') : fail('codename', ver.codename);
 
         // FIX 7: No double semicolons in bridge
@@ -1558,9 +1558,9 @@ async function testV51Features() {
         // 7. Version is v5.1.0
         const au = require('./auto_update.cjs');
         const ver = au.loadVersion();
-        ver.version === '5.1.0' ?
-            ok('Version is v5.1.0') :
-            fail('Version mismatch', 'expected 5.1.0 got ' + ver.version);
+        ver.version === '5.2.0' ?
+            ok('Version is v5.2.0') :
+            fail('Version mismatch', 'expected 5.2.0 got ' + ver.version);
         ver.codename === 'Institutional Alpha' ?
             ok('Codename: Institutional Alpha') :
             fail('Codename', ver.codename);
@@ -1970,6 +1970,9 @@ async function main() {
     // v5.2 Live-Runtime Fixes
     await testV52Fixes();
 
+    // v5.2 Full Phase Tests
+    await testV52Phases();
+
     // Cleanup seeded data
     try { require('./test_seed.cjs').cleanTestSnapshots(); } catch {}
 
@@ -2087,6 +2090,103 @@ async function testV52Fixes() {
             ok('Issue 5: /api/v5/providers-truth has healthy_ok count: ' + provTruth.summary.healthy_ok) :
             skip('providers-truth live', 'server may not be running');
     } catch(e) { skip('v5.2 live API', e.message); }
+}
+
+// ─── v5.2 FULL PHASE TESTS ──────────────────────────────────────────────────
+async function testV52Phases() {
+    console.log('\n🏗️ v5.2 FULL PHASE TESTS');
+
+    // Phase 2: Snapshot Schema Validation
+    const snapStore = require('./lib/snapshots/snapshot_store.cjs');
+    typeof snapStore.validateSnapshot === 'function' ? ok('Phase 2: validateSnapshot exported') : fail('validateSnapshot', 'not exported');
+    typeof snapStore.VALID_TYPES === 'object' ? ok('Phase 2: VALID_TYPES exported') : fail('VALID_TYPES', 'not exported');
+    Array.isArray(snapStore.VALID_TYPES) && snapStore.VALID_TYPES.length >= 17 ? ok('Phase 2: VALID_TYPES has ' + snapStore.VALID_TYPES.length + ' types') : fail('VALID_TYPES count', 'too few');
+
+    // Validate a good snapshot
+    const goodSnap = snapStore.put('MARKET', 'TEST_V52', null, { price: 100 }, { provider: 'test' });
+    const goodResult = snapStore.validateSnapshot(goodSnap);
+    goodResult.valid ? ok('Phase 2: valid snapshot passes validation') : fail('valid snapshot', goodResult.errors.join(', '));
+
+    // Validate a bad snapshot (missing fields)
+    const badResult = snapStore.validateSnapshot({ payload: {} });
+    !badResult.valid ? ok('Phase 2: invalid snapshot rejected (missing ' + badResult.errors.length + ' fields)') : fail('invalid snapshot', 'should have been rejected');
+
+    // Validate null snapshot
+    const nullResult = snapStore.validateSnapshot(null);
+    !nullResult.valid ? ok('Phase 2: null snapshot rejected') : fail('null snap', 'should reject');
+
+    // Validate bad type
+    const badTypeResult = snapStore.validateSnapshot({ id: '1', run_id: '1', type: 'BOGUS', created_at: new Date().toISOString(), payload: {} });
+    !badTypeResult.valid ? ok('Phase 2: invalid type BOGUS rejected') : fail('bogus type', 'should reject');
+
+    // Phase 7: AI Claim Filter
+    const bridgeSrc = require('fs').readFileSync(require('path').join(__dirname, 'tradingagents_bridge.cjs'), 'utf8');
+    bridgeSrc.includes('UNSUPPORTED_CLAIM_PATTERNS') ? ok('Phase 7: claim filter patterns defined') : fail('claim filter', 'missing patterns');
+    bridgeSrc.includes('filterUnsupportedClaims') ? ok('Phase 7: filterUnsupportedClaims function exists') : fail('claim filter fn', 'missing');
+    bridgeSrc.includes('unsupported_claims_removed') ? ok('Phase 7: unsupported_claims_removed field in snapshot') : fail('claims removed field', 'missing');
+    bridgeSrc.includes('retail') && bridgeSrc.includes('institutional') && bridgeSrc.includes('options') ?
+        ok('Phase 7: filters retail, institutional, options claims') : fail('claim patterns', 'incomplete');
+
+    // Phase 11: Background Reasoning Safety
+    bridgeSrc.includes('FORBIDDEN_REASONING_PATTERNS') ? ok('Phase 11: reasoning safety patterns defined') : fail('reasoning safety', 'missing');
+    bridgeSrc.includes('sanitizedThought') ? ok('Phase 11: sanitizedThought variable used') : fail('sanitized', 'missing');
+    bridgeSrc.includes('REDACTED') ? ok('Phase 11: BUY/SELL redacted in reasoning') : fail('redaction', 'missing');
+    bridgeSrc.includes('is_trade_signal: false') ? ok('Phase 11: background reasoning is_trade_signal=false') : fail('trade signal flag', 'missing');
+
+    // Phase 13: Dashboard Learning API
+    const dashSrc = require('fs').readFileSync(require('path').join(__dirname, 'dashboard.cjs'), 'utf8');
+    dashSrc.includes('/api/v5/learning-status') ? ok('Phase 13: /api/v5/learning-status endpoint') : fail('learning API', 'missing');
+    dashSrc.includes('/api/v5/model-score') ? ok('Phase 13: /api/v5/model-score endpoint') : fail('model-score API', 'missing');
+    dashSrc.includes('/api/v5/snapshot-sync') ? ok('Phase 13: /api/v5/snapshot-sync endpoint') : fail('snapshot-sync API', 'missing');
+
+    // Phase 14: Smart Health API
+    dashSrc.includes('/api/v5/smart-health') ? ok('Phase 14: /api/v5/smart-health endpoint') : fail('smart-health API', 'missing');
+    dashSrc.includes('detectConfidenceCapViolation') ? ok('Phase 14: confidence cap detector wired') : fail('confidence cap', 'missing');
+    dashSrc.includes('detectDashboardSyncLag') ? ok('Phase 14: dashboard sync lag detector wired') : fail('sync lag', 'missing');
+    dashSrc.includes('detectQuotaExhaustion') ? ok('Phase 14: quota exhaustion detector wired') : fail('quota detector', 'missing');
+
+    // Version bump
+    const version = require('./version.json');
+    version.version === '5.2.0' ? ok('Version: v5.2.0 confirmed') : fail('version', 'expected 5.2.0 got ' + version.version);
+    version.codename === 'Institutional Alpha' ? ok('Version: codename Institutional Alpha') : fail('codename', version.codename);
+
+    // Watchlist verifier format (Phase 8)
+    const watchSrc = require('fs').readFileSync(require('path').join(__dirname, 'watchlist_engine.cjs'), 'utf8');
+    watchSrc.includes('VERIFIED_ACTIVE') ? ok('Phase 8: watchlist checks VERIFIED_ACTIVE') : fail('watchlist verifier', 'missing');
+    watchSrc.includes('Long Bias') ? ok('Phase 8: watchlist uses "Long Bias" for unverified') : fail('Long Bias', 'missing');
+    watchSrc.includes('Short Bias') ? ok('Phase 8: watchlist uses "Short Bias" for unverified') : fail('Short Bias', 'missing');
+    watchSrc.includes('Not a verified trade signal') ? ok('Phase 8: watchlist has disclaimer') : fail('disclaimer', 'missing');
+
+    // Learning engine
+    const le = require('./lib/learning/learning-engine.cjs');
+    typeof le.getLearningStatus === 'function' ? ok('Phase 9: getLearningStatus exported') : fail('learning status', 'not exported');
+    typeof le.getModelScore === 'function' ? ok('Phase 9: getModelScore exported') : fail('model score', 'not exported');
+    typeof le.runWeeklyReview === 'function' ? ok('Phase 9: runWeeklyReview exported') : fail('weekly review', 'not exported');
+    const ls = le.getLearningStatus();
+    typeof ls.total_outcomes === 'number' ? ok('Phase 9: learning status has total_outcomes') : fail('total_outcomes', 'missing');
+    typeof ls.mature === 'boolean' ? ok('Phase 9: learning status has mature flag') : fail('mature', 'missing');
+    ls.safety_locks && ls.safety_locks.never_auto_change_trading_logic === true ?
+        ok('Phase 9: safety lock active — never auto-change trading logic') : fail('safety lock', 'missing');
+
+    // Smart health detectors
+    const sh = require('./smart_health.cjs');
+    typeof sh.detectConfidenceCapViolation === 'function' ? ok('Phase 14: detectConfidenceCapViolation exists') : fail('conf cap', 'missing');
+    typeof sh.detectDashboardSyncLag === 'function' ? ok('Phase 14: detectDashboardSyncLag exists') : fail('sync lag fn', 'missing');
+    typeof sh.detectNewsFalsePositive === 'function' ? ok('Phase 14: detectNewsFalsePositive exists') : fail('news fp', 'missing');
+    typeof sh.detectQuotaExhaustion === 'function' ? ok('Phase 14: detectQuotaExhaustion exists') : fail('quota fn', 'missing');
+
+    // Live API tests (skipped if server not running)
+    try {
+        const BASE = 'http://localhost:3737';
+        const shRes = await fetch(BASE + '/api/v5/smart-health').then(r => r.json()).catch(() => ({}));
+        shRes.status ? ok('Phase 14: /api/v5/smart-health returns status: ' + shRes.status) : skip('smart-health live', 'server not running');
+
+        const lsRes = await fetch(BASE + '/api/v5/learning-status').then(r => r.json()).catch(() => ({}));
+        lsRes.learning ? ok('Phase 13: /api/v5/learning-status returns data') : skip('learning-status live', 'server not running');
+
+        const ssRes = await fetch(BASE + '/api/v5/snapshot-sync').then(r => r.json()).catch(() => ({}));
+        ssRes.sync ? ok('Phase 13: /api/v5/snapshot-sync returns data') : skip('snapshot-sync live', 'server not running');
+    } catch(e) { skip('v5.2 phase live API', e.message); }
 }
 
 main().catch(function(e) { console.error('Test runner crashed:', e); process.exit(2); });

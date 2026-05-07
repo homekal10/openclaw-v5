@@ -1,0 +1,758 @@
+﻿ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+  ≡ƒö¡ OpenClaw v5.1 Institutional Alpha Test Suite
+  Target: http://localhost:3737
+  Time: 2026-05-07T22:21:35.854Z
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+[SnapshotStore] Restored 25 snapshots from disk
+[TestSeed] Seeded 7 snapshot types
+  ≡ƒî▒ Test snapshots seeded
+
+
+≡ƒôª SNAPSHOT STORE
+  Γ£à snapStore.put exists
+  Γ£à snapStore.get exists
+  Γ£à snapStore.getSyncHealth exists
+  Γ£à put/get roundtrip
+  Γ£à run_id generated
+  Γ£à cache_age computed
+  Γ£à stale_level computed: FRESH
+  Γ£à getSyncHealth returns array
+  Γ£à 17 snapshot types defined
+
+≡ƒô░ NEWS FILTER
+  Γ£à Gold headline scores high for XAUUSD: 63
+  Γ£à iPhone headline filtered for XAUUSD: 3
+  Γ£à FOMC macro event detected
+  Γ£à Transmission path: FOMCΓåÆdirectΓåÆXAUUSD
+  Γ£à Blacklisted topic ignored
+  Γ£à classifyHeadline: SIGNAL_CANDIDATE
+  Γ£à asset_relevance populated
+  Γ£à Duplicate detected
+  Γ£à canGenerateSignal exists
+
+≡ƒÜ⌐ FEATURE FLAGS
+  Γ£à isEnabled exists
+  Γ£à 17 flags defined
+  Γ£à snapshot_store enabled
+  Γ£à paid_providers disabled (correct)
+  Γ£à 3 data flags
+
+≡ƒîÉ DASHBOARD API ENDPOINTS
+  Γ£à Dashboard HTML 200
+  Γ£à sync-health 200
+  Γ£à sync-health: 17 types
+  Γ£à sync-health: available=9
+  Γ£à snapshot-stats 200
+  Γ£à snapshot/HEALTH 200
+  Γ£à news API 200
+  Γ£à signals API 200
+  Γ£à providers API 200
+  Γ£à providers: 31 entries
+  Γ£à api-usage API 200
+  Γ£à api-usage: 18 quotas
+  Γ£à system health 200
+  Γ£à feargreed API 200
+  Γ£à performance API 200
+  Γ£à rwanda API 200
+  Γ£à paid providers 200
+  Γ£à run-logs 200
+  Γ£à version API 200
+
+≡ƒôè SNAPSHOT POPULATION
+  Γ£à NEWS populated (FRESH 22s)
+  Γ£à HEALTH populated (FRESH 0s)
+  Γ£à PROVIDER populated (FRESH 0s)
+  Γ£à APIUSAGE populated (FRESH 0s)
+  ΓÅ¡∩╕Å  MARKET populated: on-demand ΓÇö needs /signal or /analyze trigger
+  ΓÅ¡∩╕Å  INDICATOR populated: on-demand ΓÇö needs /signal or /analyze trigger
+  ΓÅ¡∩╕Å  SIGNAL populated: on-demand ΓÇö needs /signal or /analyze trigger
+  ΓÅ¡∩╕Å  ANALYSIS populated: on-demand ΓÇö needs /signal or /analyze trigger
+  Γ£à FEARGREED populated (134s)
+  Γ£à MACRO populated
+
+≡ƒô¥ JS SYNTAX VALIDATION
+  Γ£à Dashboard JS extracted: 60272 chars
+  Γ£à staleBadge() in JS
+  Γ£à loadSyncHealth() in JS
+  Γ£à panelState() in JS
+  Γ£à sync-status element referenced
+  Γ£à freshness CSS class
+  Γ£à fresh-live CSS class
+  Γ£à fresh-stale CSS class
+
+ΓÜí GOLD M1 SCALPER
+  Γ£à calcBollingerBands exists
+  Γ£à calcStochastic exists
+  Γ£à calcAwesomeOscillator exists
+  Γ£à generateScalpSignal exists
+  Γ£à formatScalpSignal exists
+  Γ£à BB: upper > middle > lower
+  Γ£à BB: %B computed = 0.738
+  Γ£à BB: bandwidth > 0
+  Γ£à Stoch: K=34.1 D=28.3
+  Γ£à Stoch: zone=neutral
+  Γ£à AO: value=7.896 color=green
+  Γ£à Insufficient data ΓåÆ WAIT
+  Γ£à Signal generated: WAIT score=30
+  Γ£à All 4 indicators computed
+  Γ£à Strategy tag correct
+  Γ£à Telegram format OK
+
+≡ƒöä FRESHNESS ENFORCEMENT
+  Γ£à feargreed returns 200
+  Γ£à feargreed has stale field: false
+  Γ£à feargreed stale_level: FRESH
+  Γ£à analyses returns 200
+  Γ£à analyses source: snapshot_store
+  Γ£à No stale data marked FRESH
+
+≡ƒôè CANDLE SNAPSHOT SHARING
+  Γ£à CANDLE TTL = 60s
+  Γ£à chart BTCUSD 200
+  ΓÅ¡∩╕Å  chart source: no candles
+  Γ£à chart has stale field
+  Γ£à indicators BTCUSD 200
+  ΓÅ¡∩╕Å  ind source: no candles
+  Γ£à indicators has stale field
+
+≡ƒÄ» EXPERT INDICATORS
+  Γ£à bollinger present
+  Γ£à BB squeeze_state: NORMAL
+  Γ£à BB squeeze_state valid
+  Γ£à BB pct_b: 0.262
+  Γ£à BB bandwidth: 2352.4024
+  Γ£à stochastic present
+  Γ£à Stoch K: 39.9
+  Γ£à Stoch D: 42.5
+  Γ£à Stoch zone: neutral
+  Γ£à awesome_oscillator present
+  Γ£à AO value: -929.201
+  Γ£à AO color: green
+  Γ£à ATR 0.5x: 192.9808
+  Γ£à ATR 1.0x: 385.9616
+  Γ£à ATR 1.5x: 578.9424
+  Γ£à DI+: 13.0
+  Γ£à DI-: 28.8
+
+≡ƒôê API COUNTER EXTENSIONS
+  Γ£à lastSuccess tracked
+  Γ£à caller tracking: test_runner=55
+  Γ£à cache_hits tracked: 19
+  Γ£à fallback_calls tracked: 19
+
+≡ƒöÉ AUTO-UPDATE GUARDRAILS
+  Γ£à STRATEGY_WEIGHT autoApply
+  Γ£à STRATEGY_WEIGHT no approval
+  Γ£à TRADING_LOGIC type exists
+  Γ£à TRADING_LOGIC blocked from autoApply
+  Γ£à TRADING_LOGIC requires approval
+  Γ£à VERIFIER_LOGIC type exists
+  Γ£à VERIFIER_LOGIC requires approval
+  Γ£à SCHEMA_MIGRATION type exists
+  Γ£à BROKER_EXECUTION type exists
+  Γ£à Update types: 8 auto-apply, 10 require approval
+
+≡ƒôª SNAPSHOT STORE v2
+  Γ£à CANDLE snapshot roundtrip
+  Γ£à CANDLE threshold = 60s
+  Γ£à Snapshot has UUID id: 466a6116
+  Γ£à ANALYSIS threshold = 3600s (1h)
+  Γ£à Sync health: 17 types
+
+≡ƒô░ NEWS FILTER v2
+  Γ£à High-confidence gold/FOMC: SIGNAL_CANDIDATE (75)
+  Γ£à Proximity keywords boost: 51
+  Γ£à Irrelevant blacklisted: score=0
+
+≡ƒûÑ∩╕Å DASHBOARD JS v2
+  Γ£à Floating panel HTML present
+  Γ£à Control groups present
+  Γ£à Chart status indicator
+  Γ£à Active TF button
+  Γ£à Squeeze CSS class
+  Γ£à Expansion CSS class
+  Γ£à Indicator highlight CSS
+  Γ£à Indicator warn CSS
+  Γ£à setTF() function
+  Γ£à currentTF variable
+  Γ£à chart-updated element
+  Γ£à No [object Object] in rendered HTML
+
+≡ƒ¬Ö CRYPTO SNAPSHOT BACKING
+  Γ£à crypto/trending 200
+  Γ£à trending has stale field
+  Γ£à trending stale is boolean
+  Γ£à trending has stale_level
+  ΓÅ¡∩╕Å  trending cache_age: CoinGecko rate-limited
+  Γ£à trending has source: test_seed
+  Γ£à crypto/top 200
+  Γ£à top has stale field
+  Γ£à top stale is boolean
+  Γ£à top has stale_level
+  ΓÅ¡∩╕Å  top cache_age: CoinGecko rate-limited
+  Γ£à top has source: test_seed
+  Γ£à trending second call still has stale
+  Γ£à CRYPTO_TOP snapshot in store
+  Γ£à CRYPTO_TRENDING snapshot in store
+
+≡ƒº¡ STRATEGY ROUTER
+  Γ£à getTimingConfirmation exists
+  Γ£à getATRGuides exists
+  Γ£à listStrategies exists
+  Γ£à MAX_INDICATOR_BONUS = 15
+  Γ£à MIN_RR = 1.8
+  Γ£à 7 strategies defined: 7
+  Γ£à bonus is number: 15
+  Γ£à bonus within 0ΓÇô15 range: 15
+  Γ£à timing_label: CONFIRMED
+  Γ£à checks array present
+  Γ£à checks populated: 4
+  Γ£à ATR auto-veto triggered for RR < 1.8
+  Γ£à atr_veto_reason: ATR R:R = 0.50 < minimum 1.8 ΓåÆ AUTO-VETO
+  Γ£à ATR no-veto for RR = 3.0
+  Γ£à result has atr_veto field
+  Γ£à timing result has no direction (cannot generate signal)
+  Γ£à timing result has no action
+  Γ£à getATRGuides returns object
+  Γ£à 0.5x ATR = 100
+  Γ£à 1.0x ATR = 200
+  Γ£à 1.5x ATR = 300
+  Γ£à ATR guide includes min_rr = 1.8
+  Γ£à 0.5x ATR label warns about R:R
+  Γ£à NY Continuation timing_label: CONFIRMED
+  Γ£à NY bonus >= 0: 15
+
+≡ƒöî PROVIDER PANEL METADATA
+  Γ£à providers 200
+  Γ£à providers is array
+  Γ£à provider has status field
+  Γ£à provider has calls_today
+  Γ£à provider has quota_pct
+  Γ£à provider has latency_ms
+  Γ£à provider has last_error field
+  Γ£à paid providers 200
+  Γ£à inactive paid providers: 16
+  Γ£à no paid provider shows healthy=true
+  Γ£à providers summary present
+  Γ£à summary.total: 31
+
+≡ƒôí SIGNAL TICKER FRESHNESS
+  Γ£à allStale detection in dashboard JS
+  Γ£à 2h stale threshold (7200000ms) present
+  Γ£à stale ticker warning text present
+  Γ£à timeAgo used in signal ticker
+  Γ£à trend-updated element present
+  Γ£à top-updated element present
+  Γ£à cache_age_seconds in dashboard
+
+≡ƒº¡ STRATEGY ROUTER v3.3
+  Γ£à classifyStrategies exists
+  Γ£à getStrategySnapshot exists
+  Γ£à All strategies have session requirements
+  Γ£à classifyStrategies returns array
+  Γ£à 7 strategies classified: 7
+  Γ£à All states valid (ACTIVE/WATCHLIST/AVOID)
+  Γ£à London Sweep WATCHLIST in london_open
+  Γ£à NY Continuation AVOID in london_open
+  Γ£à All classifications have reason
+  Γ£à All have timing_label
+  Γ£à No strategy outputs BUY/SELL (classification only)
+  Γ£à snapshot.session = london_open
+  Γ£à snapshot.active is array
+  Γ£à snapshot.watchlist is array
+  Γ£à snapshot.avoid is array
+  Γ£à Asian session: 7/7 strategies AVOID
+
+≡ƒûÑ∩╕Å STRATEGY DASHBOARD PANEL
+  Γ£à strategy-router endpoint 200
+  Γ£à strategies array present
+  Γ£à session field: off_hours
+  Γ£à 7 strategies in response
+  Γ£à strategy has state: AVOID
+  Γ£à strategy has name: London Sweep Reversal
+  Γ£à strategy has reason
+  Γ£à strat-route-panel element in HTML
+  Γ£à Strategy Router title in HTML
+  Γ£à loadStrategyPanel function in JS
+  Γ£à strat-updated element present
+
+Γ¢ö VETO DECOMPOSITION v3.3
+  Γ£à VETO_STATS type in sync health
+  Γ£à STRATEGY_ROUTE type in sync health
+  Γ£à veto-panel element in HTML
+  Γ£à PASS RATE label in veto panel
+  Γ£à BLOCKED label in veto panel
+  Γ£à loadVetoPanel function in JS
+
+≡ƒÅÑ SMART HEALTH v3.3
+  Γ£à detectVetoSpike exists
+  Γ£à detectPassRateAnomaly exists
+  Γ£à veto spike: no false alarm
+  Γ£à pass-rate: no false alarm
+[SmartHealth] ≡ƒöº Self-heal: REFRESH_STALE_SNAPSHOT ΓÇö {"snapshot_type":"MACRO"}
+  Γ£à health.warnings is array
+  Γ£à health.status: CRITICAL
+  Γ£à snapshot.heapUsedMB present
+  Γ£à snapshot.errorRate present
+
+≡ƒôª SNAPSHOT CONSISTENCY v3.3
+  Γ£à 15 snapshot types: 17
+  Γ£à STRATEGY_ROUTE type registered
+  Γ£à VETO_STATS type registered
+  Γ£à CRYPTO_TRENDING type registered
+  Γ£à CRYPTO_TOP type registered
+  Γ£à No stale data marked FRESH
+
+≡ƒöä COINGECKO BACK-OFF & 429 HANDLING
+  Γ£à getCryptoCandles exists
+  Γ£à getTrending exists
+  Γ£à getFearGreed exists
+  Γ£à getCoinId exists
+  Γ£à User-Agent updated to 3.3
+  Γ£à BACKOFF_BASE_MS constant defined
+  Γ£à BACKOFF_MAX_RETRIES constant defined
+  Γ£à Rate-limit cool-down variable present
+  Γ£à HTTP 429 detection in cgGet
+  Γ£à api_counter integration in cgGet
+
+≡ƒÄ¿ DASHBOARD UI IMPROVEMENTS
+  Γ£à theme-toggle button in HTML
+  Γ£à toggleTheme function in JS
+  Γ£à data-theme attribute support
+  Γ£à localStorage theme persistence
+  Γ£à Light mode CSS variables defined
+  Γ£à Stale badge uses institutional red
+  Γ£à Quota bar shows unlimited label
+
+≡ƒôª SNAPSHOT CACHE-HIT TRACKING
+  Γ£à snapshot_store in API counter QUOTAS
+  Γ£à snapshot_store tier = local
+  Γ£à snapshot put/get roundtrip works
+  Γ£à cache_hit recordCall in get()
+  Γ£à getCachedAnalysis exported
+  Γ£à getRecentAnalyses exported
+
+≡ƒî▒ SEEDED SNAPSHOT COMPLETENESS
+  Γ£à MARKET snapshot seeded
+  Γ£à INDICATOR snapshot seeded
+  Γ£à SIGNAL snapshot seeded
+  Γ£à ANALYSIS snapshot seeded
+  Γ£à CANDLE snapshot seeded
+  Γ£à CRYPTO_TOP snapshot seeded
+  Γ£à CRYPTO_TRENDING snapshot seeded
+  Γ£à MARKET has all mandatory fields
+  Γ£à source_provider = test_seed
+  Γ£à _seed tag present
+  Γ£à ANALYSIS has agent_runs
+  Γ£à ANALYSIS has confidence
+  Γ£à ANALYSIS has final_action
+  Γ£à CANDLE has 30 candles
+
+≡ƒöî PROVIDER ROUTER v3.4
+[ProviderRouter] Fallback: coingecko ΓåÆ coinapi (coingecko failing, using coinapi)
+  Γ£à crypto_price routes to: coinapi
+  Γ£à crypto_price status: unused
+[ProviderRouter] Fallback: test_from ΓåÆ test_to (unit test)
+  Γ£à fallback logged successfully
+  Γ£à 18 provider statuses
+  Γ£à 4 paid providers disabled
+  Γ£à provider-router endpoint 200
+
+≡ƒÅÑ SMART HEALTH v3.4
+  Γ£à detectMissingAnalysis exists
+  Γ£à detectQuotaExhaustion exists
+  Γ£à detectSchedulerDelay exists
+  Γ£à detectPM2RestartSpike exists
+  Γ£à detectSupabaseFailure exists
+  Γ£à detectLLMTimeout exists
+  Γ£à detectDashboardSyncLag exists
+  Γ£à detectChartCandleMismatch exists
+  Γ£à pauseNoisyNews exists
+  Γ£à markDashboardStale exists
+  Γ£à forceProviderFallback exists
+  Γ£à quota exhaustion: no false alarm
+  Γ£à supabase failure: no false alarm
+  Γ£à LLM timeout: no false alarm
+
+≡ƒöÆ SECURITY v3.4
+  Γ£à X-Content-Type-Options: nosniff
+  Γ£à X-Frame-Options: DENY
+  Γ£à Referrer-Policy present
+  Γ£à CSP header present
+  Γ£à seed-test endpoint 200
+  Γ£à No [object Object] in dashboard HTML
+
+≡ƒñû AI PIPELINE v3.4
+Γùç injected env (33) from telegram.env // tip: Γîÿ multiple files { path: ['.env.local', '.env'] }
+Γùç injected env (0) from telegram.env // tip: Γîÿ custom filepath { path: '/custom/path/.env' }
+  Γ£à runAgentAnalysis exists
+  Γ£à checkEnvironment exists
+  Γ£à agent_runs tracking in bridge
+  Γ£à stale input detection in bridge
+  Γ£à source snapshot tracking in bridge
+  Γ£à ANALYSIS snapshot saved
+  Γ£à confidence calculation in bridge
+  Γ£à api_counter integration in bridge
+
+≡ƒöì SIGNAL INTELLIGENCE v3.4
+  Γ£à asian_range_break approved
+  Γ£à liquidity_grab_reversal approved
+  Γ£à 7 setup types
+  Γ£à conditions object present
+  Γ£à trend_condition in output
+  Γ£à liquidity_condition in output
+  Γ£à fvg_condition in output
+  Γ£à needed_confirmation in output
+  Γ£à score-only trade prevented: REJECTED
+
+≡ƒºá LEARNING ENGINE v3.4
+  Γ£à getLearningStatus exists
+  Γ£à getModelScore exists
+  Γ£à validateWeightChange exists
+  Γ£à MIN_SAMPLE_SIZE = 10
+  Γ£à MAX_WEEKLY_WEIGHT_CHANGE = 2
+  Γ£à weight +2 approved
+  Γ£à weight +5 rejected (max ┬▒2)
+  Γ£à weight clamped to 52
+  Γ£à never_remove_vetoes locked
+  Γ£à never_activate_brokers locked
+  Γ£à never_activate_paid locked
+
+≡ƒöü REPLAY & BACKTEST v3.4
+  Γ£à replaySignal exists
+  Γ£à formatReplayResult exists
+  Γ£à replay handles missing signal: Signal "__nonexistent__" not found in lo
+  Γ£à backtestRecent exists
+  Γ£à formatBacktestResult exists
+  Γ£à replay + backtest modules loaded
+
+≡ƒôÉ INDICATOR INTELLIGENCE v3.4
+  Γ£à enrichBollingerBands exists
+  Γ£à enrichStochastic exists
+  Γ£à enrichAwesomeOscillator exists
+  Γ£à enrichATR exists
+  Γ£à generateConfluenceSummary exists
+  Γ£à enrichAllIndicators exists
+  Γ£à BB enriched flag set
+  Γ£à BB squeeze_state: NORMAL
+  Γ£à BB expansion_state: STABLE
+  Γ£à BB at_lower_band detected
+  Γ£à BB single_source_warning present
+  Γ£à Stoch cross_state mapped
+  Γ£à Stoch OVERSOLD exhaustion
+  Γ£à Stoch single_source_warning present
+  Γ£à AO zero_line_state: ABOVE
+  Γ£à AO flip_state mapped
+  Γ£à AO momentum_shift: BULLISH_CROSS
+  Γ£à AO single_source_warning present
+  Γ£à ATR volatility_regime: NORMAL
+  Γ£à ATR micro_scalp guide: 5
+  Γ£à ATR normal guide: 10
+  Γ£à ATR volatility guide: 15
+  Γ£à ATR R:R guard present
+  Γ£à Confluence: _trade_approval = false
+  Γ£à Confluence: approval note present
+  Γ£à Confluence timing_confirmation: BULLISH_TIMING_CONFIRMED
+  Γ£à Confluence bullish signals: 5
+
+≡ƒöÆ AUTO-UPDATE POLICY v3.4
+  Γ£à checkUpdatePolicy exists
+  Γ£à applyAutoUpdate exists
+  Γ£à getPendingApprovals exists
+  Γ£à getUpdateLog exists
+  Γ£à false_positive_keywords: auto-apply allowed
+  Γ£à cache_ttl: auto-apply allowed
+  Γ£à display_text: auto-apply allowed
+  Γ£à trading_logic: BLOCKED requires approval
+  Γ£à veto_engine_rules: BLOCKED
+  Γ£à paid_provider_activation: BLOCKED
+  Γ£à broker_execution: BLOCKED
+  Γ£à hard_veto_remove: BLOCKED
+  Γ£à score_weight: BLOCKED without flag
+  Γ£à update log accessible
+
+≡ƒô▒ v3.4 TELEGRAM COMMANDS
+  Γ£à /learningstatus command exists
+  Γ£à /modelscore command exists
+  Γ£à /applylearning command exists
+  Γ£à /replay command exists
+  Γ£à /backtest-recent command exists
+  Γ£à /securitystatus command exists
+  Γ£à /ratelimits command exists
+  Γ£à /schema command exists
+  Γ£à /backupstatus command exists
+  Γ£à /indicatorscore command exists
+  Γ£à /replay admin-gated
+
+≡ƒûÑ∩╕Å  DASHBOARD v3.4 PANELS
+  Γ£à /api/v4/learning-status ΓåÆ 200
+  Γ£à /api/v4/learning-status returns JSON
+  Γ£à /api/v4/replay-results ΓåÆ 200
+  Γ£à /api/v4/replay-results returns JSON
+  Γ£à /api/v4/indicator-intelligence ΓåÆ 200
+  Γ£à /api/v4/indicator-intelligence returns JSON
+  Γ£à /api/v4/auto-update-log ΓåÆ 200
+  Γ£à /api/v4/auto-update-log returns JSON
+  Γ£à learning-status has max_weekly_weight_change
+  Γ£à learning-status has total_outcomes
+  Γ£à replay-results.results is array
+  Γ£à indicator-intelligence has safety _note
+  Γ£à HTML: learning-panel exists
+  Γ£à HTML: replay-panel exists
+  Γ£à HTML: indic-intel-panel exists
+  Γ£à JS: loadLearningPanel function exists
+  Γ£à JS: loadReplayPanel function exists
+  Γ£à JS: loadIndicatorIntel function exists
+  Γ£à Structured logger: jsonLog present
+
+ΓÜí SCALPER + INDICATOR INTELLIGENCE v3.4
+  Γ£à scalper imports indicator_intelligence
+  Γ£à indicatorIntelligence variable defined
+  Γ£à scalper calls enrichBollingerBands
+  Γ£à scalper calls enrichStochastic
+  Γ£à scalper calls enrichAwesomeOscillator
+  Γ£à scalper calls enrichATR
+  Γ£à scalper generates confluence summary
+  Γ£à scalper: _trade_approval=false preserved
+  Γ£à scalper: approval note present
+  Γ£à scalper stamps intelligence_version
+  Γ£à generateScalpSignal loads after enrichment wiring
+  Γ£à formatScalpSignal still exported
+
+≡ƒ¢í∩╕Å CONFIDENCE CAP v4.0
+  Γ£à CONFIDENCE_CAP constant defined
+  Γ£à confidence capped at 88
+  Γ£à missing news data penalizes confidence
+  Γ£à missing snapshots penalize confidence
+
+≡ƒô░ NEWS FILTER v4.0
+  Γ£à GBP headline blocked from OIL scoring
+  Γ£à GBP headline blocked from XAUUSD scoring
+  Γ£à Rwanda headline capped (not SIGNAL_CANDIDATE)
+  Γ£à Rwanda never VERIFIED_SIGNAL
+  Γ£à WAR without evidence scores lower than with evidence
+  Γ£à direct gold headline still scores high
+
+≡ƒÅ╖∩╕Å VERSION CONSISTENCY v4.0
+  Γ£à telegram_bot: no v3.0 references
+  Γ£à telegram_bot: has v4.0 Expert labels
+  Γ£à dashboard: has v4.0 label
+  Γ£à dashboard: INSTITUTIONAL ALPHA badge
+  Γ£à smart_health: has v4.0 label
+
+≡ƒÅÑ SMART HEALTH v4.0 DETECTORS
+  Γ£à detectConfidenceCapViolation exists
+  Γ£à detectStaleRefreshLoop exists
+  Γ£à detectNewsFalsePositive exists
+  Γ£à detectSchedulerTimeout exists
+  Γ£à capViolation returns { fired: boolean }
+  Γ£à staleRefreshLoop returns { fired: boolean }
+
+ΓÅ▒∩╕Å SCHEDULER v4.0 HARDENING
+Γùç injected env (0) from telegram.env // tip: Γîÿ override existing { override: true }
+Γùç injected env (0) from telegram.env // tip: Γùê encrypted .env [www.dotenvx.com]
+Γùç injected env (0) from telegram.env // tip: Γîÿ multiple files { path: ['.env.local', '.env'] }
+Γùç injected env (0) from telegram.env // tip: Γùê encrypted .env [www.dotenvx.com]
+Γùç injected env (0) from telegram.env // tip: Γîÿ enable debugging { debug: true }
+Γùç injected env (0) from telegram.env // tip: Γîÿ suppress logs { quiet: true }
+  Γ£à withTimeout exported
+  Γ£à checkCircuitBreaker exported
+  Γ£à recordProviderFailure exported
+  Γ£à _jobLocks state object exists
+  Γ£à _circuitBreakers state object exists
+[2026-05-07T22:21:39.730Z] [SCHEDULER] [CIRCUIT] test_provider_v40 tripped ΓÇö 3 failures in 15min, paused 5min
+[2026-05-07T22:21:39.730Z] [SCHEDULER] [CIRCUIT] test_provider_v40 paused until 2026-05-07T22:26:39.730Z
+  Γ£à circuit breaker trips after 3 failures
+
+≡ƒôè DASHBOARD TRUTH LAYER v4.0
+  Γ£à freshnessBadge checks stale field explicitly
+  Γ£à freshnessBadge has v4.0 HARD RULE comment
+  Γ£à panelState has Retry button
+  Γ£à panelState shows source info
+  Γ£à panelState shows lastAttempt
+
+≡ƒÜÇ v5.0 INSTITUTIONAL ALPHA FEATURES
+  Γ£à semanticScoreHeadline hook exported
+  Γ£à Dashboard includes dynamic UI regime handling
+  Γ£à Dashboard includes strategy rationale panel
+  Γ£à Predictive throttling (15% reserve) implemented
+  Γ£à Predictive throttling checks caller context
+  Γ£à Temporal error clustering logic exists
+  Γ£à TEMPORAL_PATTERN suggestion logic exists
+  Γ£à proposeAlgorithmUpdate function exported
+  Γ£à Autonomous update uses VM sandboxing
+
+≡ƒöº v5.0 AUDIT FIX VERIFICATION
+  Γ£à bridge exports runAgentAnalysis
+  Γ£à bridge exports startContinuousReasoningLoop
+  Γ£à bridge exports requestCriticalReasoning
+  Γ£à bridge exports getProvider (was lost)
+  Γ£à Reasoning loop wired in scheduler
+  Γ£à getErrorTrendSummary exported
+  Γ£à getErrorTrendSummary returns { status }
+  Γ£à getErrorTrendSummary returns { message }
+  Γ£à Dashboard has /api/v5/reasoning route
+  Γ£à Dashboard has /api/v5/error-trends route
+  Γ£à Dashboard has /api/v5/system-status route
+  Γ£à Dashboard has /api/v5/providers route
+  Γ£à watchRepoForUpdates exported
+  Γ¥î version: expected 5.1.0, got 5.2.0
+  Γ£à codename is Institutional Alpha
+  Γ£à No double semicolons in bridge
+  Γ£à Single module.exports in bridge (no premature export)
+
+≡ƒÅ¢∩╕Å v5.1 INSTITUTIONAL FEATURES
+  Γ£à safeToFixed exported from global-macro
+  Γ£à safeToFixed(null) ΓåÆ N/A
+  Γ£à safeToFixed(undefined) ΓåÆ N/A
+  Γ£à safeToFixed(NaN) ΓåÆ N/A
+  Γ£à safeToFixed(3.14159,2) ΓåÆ "3.14"
+  ΓÅ¡∩╕Å  Rwanda output check: analyzeRwandaContext/getRwandaSignals not exported
+  Γ£à GBP/USD PMI ΓåÆ OIL blocked: score=0 action=IGNORE
+  Γ£à GBP/USD PMI ΓåÆ XAUUSD blocked: score=0
+  Γ£à OPEC ΓåÆ OIL is relevant: score=63
+  Γ¥î Version mismatch: expected 5.1.0 got 5.2.0
+  Γ£à Codename: Institutional Alpha
+  Γ£à getJournalStats exported from learning-engine
+  Γ£à getJournalStats.total is number
+  Γ£à getJournalStats.wins is number
+  Γ£à getJournalStats.losses is number
+  Γ£à getRefreshCircuitStatus exported from scheduler
+  ΓÅ¡∩╕Å  Background reasoning snap check: no BACKGROUND_REASONING snapshot yet
+  Γ£à autoApplySafeUpdates exported
+  Γ£à watchRepoForUpdates exported
+
+≡ƒöî v5.1 PROVIDER STATUS LABELS
+  Γ£à computeProviderStatus exported
+  Γ£à bloomberg (paid placeholder) ΓåÆ DISABLED
+  Γ£à test_unused_provider ΓåÆ UNUSED (0 calls)
+  Γ£à provider with 5+ failures ΓåÆ FAILING
+  Γ£à getAllWithStatus returns array: 32 providers
+  Γ£à All providers have valid computed_status
+  Γ£à Paid placeholders all show DISABLED
+
+≡ƒ¢í∩╕Å v5.1 AUTO-UPDATE SANDBOX
+  Γ£à scanForForbiddenAPIs exported
+  Γ£à require() blocked in sandbox
+  Γ£à eval() blocked in sandbox
+  Γ£à new Function() blocked in sandbox
+  Γ£à child_process blocked in sandbox
+  Γ£à process.exit() blocked in sandbox
+  Γ£à Safe code passes sandbox scanner
+  Γ£à fs.writeFileSync blocked in sandbox
+  Γ£à fetch() blocked in sandbox (network calls)
+
+≡ƒç╖≡ƒç╝ v5.1 RWANDA GLOBAL SIGNAL CONTEXT
+  Γ£à Global headline uses CONTEXT labels, not BUY/SELL
+  Γ£à Global signals all have is_trade_signal: false
+  Γ£à Global signals all have disclaimer
+  Γ£à War headline ΓåÆ BULLISH_CONTEXT (not BUY)
+  Γ£à Rwanda headline outputs MACRO_CONTEXT (not BUY/SELL)
+  Γ£à Rwanda signals: is_trade_signal always false
+
+≡ƒöî v5.1 MACRO CIRCUIT BREAKER WIRING
+  Γ£à safeToFixed(null) ΓåÆ N/A (unchanged)
+  Γ£à canRefreshSnapshot exported from scheduler
+  Γ£à recordRefreshAttempt exported from scheduler
+  Γ£à MACRO circuit initially CLOSED (allows refresh)
+[2026-05-07T22:21:39.745Z] [SCHEDULER] [CIRCUIT] TEST_MACRO_CB refresh circuit OPEN ΓÇö 3 failures in window, cooldown 30min
+[2026-05-07T22:21:39.772Z] [SCHEDULER] [CIRCUIT] TEST_MACRO_CB refresh blocked ΓÇö cooldown until 2026-05-07T22:51:39.745Z
+  Γ£à TEST_MACRO_CB circuit OPEN after 3 failures
+  Γ£à getRefreshCircuitStatus returns array: 2 circuits
+
+≡ƒîÉ v5.1 API ENDPOINTS
+  Γ£à All providers have status in API response
+  Γ£à Provider summary object present
+  Γ£à Provider summary has total: 31
+  Γ£à /api/v5/health-actions endpoint reachable (pending restart)
+  Γ£à /api/v5/error-trends returns status: CLEAR
+  Γ£à /api/v5/reasoning returns reasoning data
+  Γ£à /api/v5/system-status returns: v5.2.0
+
+≡ƒöº v5.2 LIVE-RUNTIME FIXES
+  Γ£à Issue 1: isCommandLocked function exists
+  Γ£à Issue 1: _commandLocks map defined
+  Γ£à Issue 1: COMMAND_LOCK_MS constant defined
+  Γ£à Issue 8: /chart help checks sym === help
+  Γ£à Issue 6: null-output guard message exists
+  Γ£à Issue 6: missingAgents tracking exists
+  Γ£à Issue 6: raw JSON stringify removed from agent output
+  Γ£à Issue 5: getProviderErrorRate exported
+  Γ£à Issue 5: UNUSED guard for high-error providers
+  Γ£à Issue 3: getSchedulerHealth exported
+  Γ£à Issue 3: getSchedulerHealth returns array
+  Γ£à Issue 3: health entries have job field
+  Γ£à Issue 3: all jobs have valid status
+  Γ£à Issue 3: _jobFailures tracker exists
+  Γ£à Issue 10: apiFetch uses AbortController
+  Γ£à Issue 10: 8s timeout value present
+  Γ£à Issue 11: net.connect blocked
+  Γ£à Issue 11: http.request blocked
+  Γ£à Issue 11: https.request blocked
+  Γ£à Issue 11: dynamic import() blocked
+  Γ£à Issue 11: safe code passes scanner
+  Γ£à Issue 9: no "COFFEE ΓÇö BUY" in Rwanda source
+  Γ£à Issue 9: no "XAUUSD ΓÇö BUY" in Rwanda source
+  Γ£à Issue 9: no direction BUY in Rwanda
+  Γ£à Issue 9: no direction SELL in Rwanda
+  Γ£à Issue 2: /api/v5/signals-fresh endpoint registered
+  Γ£à Issue 12: /api/v5/paid-readiness endpoint registered
+  Γ£à Issue 5: /api/v5/providers-truth endpoint registered
+  Γ£à Issue 3: /api/v5/scheduler-health endpoint registered
+  Γ£à Issue 7: getJournalStats function exported
+  Γ£à Issue 7: getJournalStats returns total count
+  Γ£à v5.2: INSTITUTIONAL ALPHA badge present
+  Γ£à Issue 4: bot uses fetchCandles
+  ΓÅ¡∩╕Å  scheduler-health live: server may not be running
+  ΓÅ¡∩╕Å  paid-readiness live: server may not be running
+  ΓÅ¡∩╕Å  providers-truth live: server may not be running
+
+≡ƒÅù∩╕Å v5.2 FULL PHASE TESTS
+  Γ£à Phase 2: validateSnapshot exported
+  Γ£à Phase 2: VALID_TYPES exported
+  Γ£à Phase 2: VALID_TYPES has 21 types
+  Γ£à Phase 2: valid snapshot passes validation
+  Γ£à Phase 2: invalid snapshot rejected (missing 4 fields)
+  Γ£à Phase 2: null snapshot rejected
+  Γ£à Phase 2: invalid type BOGUS rejected
+  Γ£à Phase 7: claim filter patterns defined
+  Γ£à Phase 7: filterUnsupportedClaims function exists
+  Γ£à Phase 7: unsupported_claims_removed field in snapshot
+  Γ£à Phase 7: filters retail, institutional, options claims
+  Γ£à Phase 11: reasoning safety patterns defined
+  Γ£à Phase 11: sanitizedThought variable used
+  Γ£à Phase 11: BUY/SELL redacted in reasoning
+  Γ£à Phase 11: background reasoning is_trade_signal=false
+  Γ£à Phase 13: /api/v5/learning-status endpoint
+  Γ£à Phase 13: /api/v5/model-score endpoint
+  Γ£à Phase 13: /api/v5/snapshot-sync endpoint
+  Γ£à Phase 14: /api/v5/smart-health endpoint
+  Γ£à Phase 14: confidence cap detector wired
+  Γ£à Phase 14: dashboard sync lag detector wired
+  Γ£à Phase 14: quota exhaustion detector wired
+  Γ£à Version: v5.2.0 confirmed
+  Γ£à Version: codename Institutional Alpha
+  Γ£à Phase 8: watchlist checks VERIFIED_ACTIVE
+  Γ£à Phase 8: watchlist uses "Long Bias" for unverified
+  Γ£à Phase 8: watchlist uses "Short Bias" for unverified
+  Γ£à Phase 8: watchlist has disclaimer
+  Γ£à Phase 9: getLearningStatus exported
+  Γ£à Phase 9: getModelScore exported
+  Γ£à Phase 9: runWeeklyReview exported
+  Γ£à Phase 9: learning status has total_outcomes
+  Γ£à Phase 9: learning status has mature flag
+  Γ£à Phase 9: safety lock active ΓÇö never auto-change trading logic
+  Γ£à Phase 14: detectConfidenceCapViolation exists
+  Γ£à Phase 14: detectDashboardSyncLag exists
+  Γ£à Phase 14: detectNewsFalsePositive exists
+  Γ£à Phase 14: detectQuotaExhaustion exists
+  ΓÅ¡∩╕Å  smart-health live: server not running
+  ΓÅ¡∩╕Å  learning-status live: server not running
+  ΓÅ¡∩╕Å  snapshot-sync live: server not running
+[TestSeed] Cleaned 7 seeded snapshots
+
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+  RESULTS: Γ£à 597 passed | Γ¥î 2 failed | ΓÅ¡∩╕Å  16 skipped
+  TOTAL: 615 tests
+  GRADE: ≡ƒƒó GOOD
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
