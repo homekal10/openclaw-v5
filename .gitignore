@@ -155,3 +155,17 @@ extensions/qa-lab/web/dist/
 *.exe
 *.msi
 *.dmg
+
+# OpenClaw local/runtime safety
+.env.*
+!.env.example
+telegram.env
+env_vars_export.txt
+logs/
+archived_old_logs_*/
+backups/
+forensic_log_tails/
+OPENCLAW_CHATGPT_HANDOFF_CURRENT.zip
+OPENCLAW_CHATGPT_HANDOFF_CURRENT/
+lib/research/data/csv/*.csv
+!lib/research/data/csv/.gitkeep

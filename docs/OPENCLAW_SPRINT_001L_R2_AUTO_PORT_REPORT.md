@@ -1,0 +1,81 @@
+﻿# OpenClaw Sprint 001L-R2 Auto-Port Report
+
+Generated:
+2026-06-15T22:13:53.1126787+03:00
+
+## Clean Worktree
+
+Path:
+C:\Users\Homekal\OpenClaw_push_clean_20260615_204330
+
+Base:
+2b3dda800b
+
+Safe source commit:
+ff29b3379c
+
+## Auto-Ported Files
+
+Count:
+44
+
+Files:
+docs/OPENCLAW_COMMIT_RISK_REGISTER.md
+docs/OPENCLAW_LOCAL_AI_COMMIT_CANDIDATE_FILELIST.md
+docs/OPENCLAW_LOCAL_AI_SAFETY_INVENTORY.md
+docs/OPENCLAW_LOCAL_PROVIDER_HEALTH_FOUNDATION.md
+docs/OPENCLAW_PORT_OWNERSHIP.md
+docs/OPENCLAW_SAFE_COMMIT_PLAN.md
+docs/OPENCLAW_SAFE_STAGING_MANIFEST_LOCAL_AI.md
+docs/OPENCLAW_SPRINT_001A_BOARD_ACCEPTANCE.md
+docs/OPENCLAW_SPRINT_001A_FINAL_ACCEPTANCE.md
+docs/OPENCLAW_SPRINT_001A_RUNTIME_REPAIR_REPORT.md
+docs/OPENCLAW_SPRINT_001B_BOARD_ACCEPTANCE.md
+docs/OPENCLAW_SPRINT_001B_PROVIDER_ROUTER_FOUNDATION.md
+docs/OPENCLAW_SPRINT_001C_BOARD_ACCEPTANCE.md
+docs/OPENCLAW_SPRINT_001D_BOARD_ACCEPTANCE.md
+docs/OPENCLAW_SPRINT_001D_FINAL_ACCEPTANCE.md
+docs/OPENCLAW_SPRINT_001D_OLLAMA_ONLY_POLICY.md
+docs/OPENCLAW_SPRINT_001E_BOARD_ACCEPTANCE.md
+docs/OPENCLAW_SPRINT_001E_CONTROLLED_OLLAMA_INFERENCE_ADAPTER.md
+docs/OPENCLAW_SPRINT_001E_FINAL_ACCEPTANCE.md
+docs/OPENCLAW_SPRINT_001F_BOARD_ACCEPTANCE.md
+docs/OPENCLAW_SPRINT_001F_FINAL_ACCEPTANCE.md
+docs/OPENCLAW_SPRINT_001F_INFERENCE_SAFETY_HARNESS_REPORT.md
+docs/OPENCLAW_SPRINT_001F_LOCAL_INFERENCE_SAFETY_HARNESS.md
+docs/OPENCLAW_SPRINT_001G_REPO_HYGIENE_REPORT.md
+docs/OPENCLAW_SPRINT_001G_WORKTREE_INVENTORY.md
+docs/OPENCLAW_SPRINT_001H_BOARD_ACCEPTANCE.md
+docs/OPENCLAW_SPRINT_001H_COMMIT_BOUNDARY_ISOLATION.md
+docs/OPENCLAW_SPRINT_001H_VERIFICATION_REPORT.md
+docs/OPENCLAW_SPRINT_001I_BOARD_ACCEPTANCE.md
+docs/OPENCLAW_SPRINT_001I_FINAL_ACCEPTANCE.md
+docs/OPENCLAW_SPRINT_001I_MANUAL_SELECTIVE_STAGING_PLAN.md
+docs/OPENCLAW_SPRINT_001I_STAGING_RISK_REVIEW.md
+docs/OPENCLAW_SPRINT_001I_VERIFICATION_REPORT.md
+lib/providers/local_llm_health.cjs
+lib/providers/local_llm_policy.cjs
+lib/providers/local_llm_router.cjs
+lib/providers/ollama_golden_prompts.cjs
+lib/providers/ollama_inference_adapter.cjs
+Modelfile.openclaw-phi3-mini
+scripts/check_local_llm_health.cjs
+scripts/check_local_llm_policy.cjs
+scripts/check_local_llm_router.cjs
+scripts/smoke_ollama_inference_adapter.cjs
+scripts/test_ollama_inference_safety_harness.cjs
+
+## Intentionally Skipped
+
+Manual merge required:
+.env.example
+.gitignore
+dashboard.cjs
+
+Blocked because deploy/main has no dashboard-ui:
+dashboard-ui/src/api.js
+dashboard-ui/src/pages/Providers.jsx
+
+## Verdict
+
+SPRINT_001L_R2_AUTO_PORT_COMPLETE_PENDING_MANUAL_MERGE
