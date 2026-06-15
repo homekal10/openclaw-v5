@@ -9,6 +9,7 @@ const { getRecentHeadlines, getSignals, getRwandaIntel, getPerformance } = requi
 const snapStore = require('./lib/snapshots/snapshot_store.cjs');
 
 const app  = express();
+app.use(express.json()); // Required for controlled local-AI smoke POST body parsing
 const PORT = process.env.DASHBOARD_PORT || 3737;
 
 // ── CORS: Allow Netlify frontend + any local clients ─────────────────────────
@@ -2594,6 +2595,87 @@ app.get('/api/v5/snapshot-sync', (req, res) => {
 });
 
 let server = null;
+
+// OPENCLAW_LOCAL_AI_PLATFORM_ROUTES_START
+// Sprint 001L-R3B: Controlled local-AI platform routes.
+// Safety: fixed internal smoke prompt only; no strategy wiring, no DB writes, no MT5/live execution.
+
+app.get('/api/platform/provider-health', async (req, res) => {
+    try {
+        const { getLocalProviderHealth } = require('./lib/providers/local_llm_health.cjs');
+        const health = await getLocalProviderHealth();
+        res.json(health);
+    } catch (e) {
+        res.status(500).json({
+            ok: false,
+            generatedAt: new Date().toISOString(),
+            error: e?.message || 'provider_health_failed'
+        });
+    }
+});
+
+app.get('/api/platform/local-llm-router', async (req, res) => {
+    try {
+        const { getLocalLLMRouterDecision } = require('./lib/providers/local_llm_router.cjs');
+        const router = await getLocalLLMRouterDecision();
+        res.json({
+            ok: true,
+            generatedAt: new Date().toISOString(),
+            router
+        });
+    } catch (e) {
+        res.status(500).json({
+            ok: false,
+            generatedAt: new Date().toISOString(),
+            error: e?.message || 'local_llm_router_failed'
+        });
+    }
+});
+
+app.get('/api/platform/local-llm-policy', (req, res) => {
+    try {
+        const { getLocalLLMPolicy } = require('./lib/providers/local_llm_policy.cjs');
+        res.json({
+            ok: true,
+            generatedAt: new Date().toISOString(),
+            policy: getLocalLLMPolicy()
+        });
+    } catch (e) {
+        res.status(500).json({
+            ok: false,
+            generatedAt: new Date().toISOString(),
+            error: e?.message || 'local_llm_policy_failed'
+        });
+    }
+});
+
+app.post('/api/platform/ollama-inference-smoke', async (req, res) => {
+    const SMOKE_PROMPT = 'Reply with exactly this text and nothing else: OPENCLAW_OLLAMA_ADAPTER_PASS';
+
+    try {
+        const { runOllamaInferenceOnce } = require('./lib/providers/ollama_inference_adapter.cjs');
+
+        const result = await runOllamaInferenceOnce({
+            prompt: SMOKE_PROMPT,
+            allowLocalInference: req.body?.allowLocalInferenceSmoke === true,
+            purpose: 'dashboard_ollama_smoke'
+        });
+
+        if (!result?.ok) {
+            return res.status(403).json(result);
+        }
+
+        return res.json(result);
+    } catch (e) {
+        return res.status(500).json({
+            ok: false,
+            generatedAt: new Date().toISOString(),
+            error: e?.message || 'ollama_inference_smoke_failed'
+        });
+    }
+});
+
+// OPENCLAW_LOCAL_AI_PLATFORM_ROUTES_END
 function startDashboard() {
     if (server) return;
     const tryListen = (port) => {
@@ -2616,3 +2698,10 @@ function startDashboard() {
 function stopDashboard() { if (server) server.close(); }
 
 module.exports = { startDashboard, stopDashboard, storeAnalysis, getCachedAnalysis, getRecentAnalyses, PORT };
+
+// OPENCLAW_DASHBOARD_DIRECT_RUN_START
+// Starts the dashboard only when this file is executed directly.
+if (require.main === module) {
+    startDashboard();
+}
+// OPENCLAW_DASHBOARD_DIRECT_RUN_END

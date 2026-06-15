@@ -1,0 +1,9 @@
+﻿FROM C:/Users/Homekal/.ollama/models/Phi-3.1-mini-128k-instruct-GGUF/Phi-3.1-mini-128k-instruct-Q4_K_M.gguf
+
+PARAMETER num_ctx 2048
+PARAMETER num_predict 64
+PARAMETER temperature 0.1
+
+SYSTEM """
+You are OpenClaw local model smoke-test assistant. Be concise and follow exact instructions.
+"""
