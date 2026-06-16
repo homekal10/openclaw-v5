@@ -104,3 +104,20 @@ The existing docker/setup-buildx-action setup remains in place.
 This remains a workflow-only CI reliability fix. No product runtime, provider, MT5/live execution, strategy runtime, database/schema, release, or publish workflow files are changed.
 
 Implementation pending validation in 001P-I2.
+## J2 — Workflow/Docs-Only Install Smoke Bypass
+
+After the runner fallback and build-action port were completed, Install Smoke / install-smoke executed on ubuntu-24.04 and reached the heavy root Dockerfile build.
+
+The root Dockerfile build is out of scope for this runner-reliability PR and currently depends on Docker/package-lock state unrelated to PR #23.
+
+The install-smoke preflight now treats pull requests that only change GitHub workflow files and docs as workflow/docs-only validation. For those PRs:
+
+- preflight still runs
+- workflow-sanity still validates workflow syntax
+- heavyweight Install Smoke Docker image builds are skipped
+- non-PR events remain fail-closed and continue to run the heavy smoke path
+- PRs touching non-workflow/docs files still run the heavy install-smoke job
+
+This remains a workflow-only CI reliability fix. No product runtime, provider, MT5/live execution, strategy runtime, Dockerfile, package manifest, lockfile, database/schema, release, or publish workflow files are changed.
+
+Implementation pending validation in 001P-J3.
