@@ -83,3 +83,24 @@ It has now been changed to:
 This remains a workflow-only CI reliability fix. No product runtime, provider, MT5/live execution, strategy runtime, database/schema, release, or publish workflow files are changed.
 
 Implementation pending validation in 001P-H2.
+## I1 — Install Smoke Build Action Port
+
+After moving Install Smoke / install-smoke onto ubuntu-24.04, the job was no longer queued and began executing.
+
+GitHub then failed the job at:
+
+- Build root Dockerfile smoke image
+
+Diagnosis showed the install-smoke Docker build steps still used:
+
+- useblacksmith/build-push-action@v2
+
+Because the job now runs on a GitHub-hosted runner, the install-smoke Docker build steps have been ported to:
+
+- docker/build-push-action@v6
+
+The existing docker/setup-buildx-action setup remains in place.
+
+This remains a workflow-only CI reliability fix. No product runtime, provider, MT5/live execution, strategy runtime, database/schema, release, or publish workflow files are changed.
+
+Implementation pending validation in 001P-I2.
