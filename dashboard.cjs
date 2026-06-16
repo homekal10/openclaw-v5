@@ -2675,6 +2675,20 @@ app.post('/api/platform/ollama-inference-smoke', async (req, res) => {
     }
 });
 
+
+app.get('/api/platform/local-ai-observability', async (req, res) => {
+    try {
+        const { getLocalAIObservabilitySnapshot } = require('./lib/providers/local_ai_observability.cjs');
+        const snapshot = await getLocalAIObservabilitySnapshot();
+        res.json(snapshot);
+    } catch (e) {
+        res.status(500).json({
+            ok: false,
+            generatedAt: new Date().toISOString(),
+            error: e?.message || 'local_ai_observability_failed'
+        });
+    }
+});
 // OPENCLAW_LOCAL_AI_PLATFORM_ROUTES_END
 function startDashboard() {
     if (server) return;
