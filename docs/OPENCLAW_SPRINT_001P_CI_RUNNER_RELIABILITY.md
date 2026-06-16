@@ -45,3 +45,22 @@ ubuntu-24.04
 ## Sprint Status
 
 Implementation pending validation in 001P-C.
+## F2 — Security-Fast Scope Fix
+
+After PR #23 proved that GitHub-hosted runners execute the PR gate jobs, `CI / security-fast` failed at `Audit production dependencies`.
+
+Diagnosis showed PR #23 changed only workflow/docs files and no dependency manifests or lockfiles.
+
+The production dependency audit is now scoped as follows:
+
+- run on non-PR events
+- run fail-closed when the base commit is unavailable
+- run on PRs when dependency manifests or lockfiles changed
+- skip on workflow/docs-only PRs with no dependency manifest or lockfile changes
+
+Workflow security checks remain active:
+
+- detect-private-key
+- zizmor audit for changed GitHub workflows
+
+Implementation pending validation in 001P-F3.
