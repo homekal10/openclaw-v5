@@ -64,3 +64,22 @@ Workflow security checks remain active:
 - zizmor audit for changed GitHub workflows
 
 Implementation pending validation in 001P-F3.
+## H1 — Residual Install Smoke Queue Fix
+
+After PR #23 was updated with the security-fast scope fix, GitHub still showed residual queued checks.
+
+Discovery found the remaining directly queued PR-relevant job:
+
+- Install Smoke / install-smoke
+
+The job still used:
+
+- blacksmith-16vcpu-ubuntu-2404
+
+It has now been changed to:
+
+- ubuntu-24.04
+
+This remains a workflow-only CI reliability fix. No product runtime, provider, MT5/live execution, strategy runtime, database/schema, release, or publish workflow files are changed.
+
+Implementation pending validation in 001P-H2.
