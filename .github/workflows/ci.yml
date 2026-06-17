@@ -125,6 +125,7 @@ jobs:
         env:
           OPENCLAW_CI_DOCS_ONLY: ${{ steps.docs_scope.outputs.docs_only }}
           OPENCLAW_CI_DOCS_CHANGED: ${{ steps.docs_scope.outputs.docs_changed }}
+          OPENCLAW_CI_BASE_SHA: ${{ github.event_name == 'push' && github.event.before || github.event.pull_request.base.sha }}
           OPENCLAW_CI_RUN_NODE: ${{ steps.changed_scope.outputs.run_node || 'false' }}
           OPENCLAW_CI_RUN_MACOS: ${{ steps.changed_scope.outputs.run_macos || 'false' }}
           OPENCLAW_CI_RUN_ANDROID: ${{ steps.changed_scope.outputs.run_android || 'false' }}
@@ -135,6 +136,7 @@ jobs:
           OPENCLAW_CI_CHANGED_EXTENSIONS_MATRIX: ${{ steps.changed_extensions.outputs.changed_extensions_matrix || '{"include":[]}' }}
         run: |
           node --input-type=module <<'EOF'
+          import { execFileSync } from "node:child_process";
           import { appendFileSync } from "node:fs";
           import {
             createNodeTestShards,
@@ -164,9 +166,34 @@ jobs:
           const outputPath = process.env.GITHUB_OUTPUT;
           const eventName = process.env.GITHUB_EVENT_NAME ?? "pull_request";
           const isPush = eventName === "push";
+          const changedPaths = (() => {
+            const base = process.env.OPENCLAW_CI_BASE_SHA;
+            if (!base) return [];
+
+            try {
+              return execFileSync("git", ["diff", "--name-only", base, "HEAD"], {
+                encoding: "utf8",
+              })
+                .split(/\r?\n/u)
+                .map((path) => path.trim())
+                .filter(Boolean);
+            } catch {
+              return [];
+            }
+          })();
+          const workflowHygieneOnly =
+            changedPaths.length > 0 &&
+            changedPaths.every(
+              (path) =>
+                path.startsWith(".github/workflows/") ||
+                path === "docs/OPENCLAW_SPRINT_001Q_CI_MAIN_HEALTH_RELEASE_HYGIENE.md",
+            );
           const docsOnly = parseBoolean(process.env.OPENCLAW_CI_DOCS_ONLY);
           const docsChanged = parseBoolean(process.env.OPENCLAW_CI_DOCS_CHANGED);
-          const runNode = parseBoolean(process.env.OPENCLAW_CI_RUN_NODE) && !docsOnly;
+          const runNode =
+            parseBoolean(process.env.OPENCLAW_CI_RUN_NODE) &&
+            !docsOnly &&
+            !workflowHygieneOnly;
           const runMacos = parseBoolean(process.env.OPENCLAW_CI_RUN_MACOS) && !docsOnly;
           const runAndroid = parseBoolean(process.env.OPENCLAW_CI_RUN_ANDROID) && !docsOnly;
           const runWindows = parseBoolean(process.env.OPENCLAW_CI_RUN_WINDOWS) && !docsOnly;
@@ -258,7 +285,7 @@ jobs:
             run_check: runNode,
             run_check_additional: runNode,
             run_build_smoke: runNode,
-            run_check_docs: docsChanged,
+            run_check_docs: docsChanged && !workflowHygieneOnly,
             run_control_ui_i18n: runControlUiI18n,
             run_skills_python_job: runSkillsPython,
             run_checks_windows: runWindows,
@@ -435,7 +462,7 @@ jobs:
   build-artifacts:
     needs: [preflight]
     if: needs.preflight.outputs.run_build_artifacts == 'true'
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -455,6 +482,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Build dist
@@ -482,7 +510,7 @@ jobs:
     name: ${{ matrix.check_name }}
     needs: [preflight]
     if: needs.preflight.outputs.run_checks_fast == 'true'
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -498,6 +526,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Run ${{ matrix.task }} (${{ matrix.runtime }})
@@ -526,7 +555,7 @@ jobs:
     name: ${{ matrix.check_name }}
     needs: [preflight]
     if: needs.preflight.outputs.run_checks_fast == 'true'
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -542,6 +571,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Run extension shard
@@ -553,7 +583,7 @@ jobs:
     name: checks-node-extensions
     needs: [preflight, checks-node-extensions-shard]
     if: always() && needs.preflight.outputs.run_checks_fast == 'true'
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Verify extension shards
@@ -569,7 +599,7 @@ jobs:
     name: ${{ matrix.check_name }}
     needs: [preflight, build-artifacts]
     if: always() && needs.preflight.outputs.run_checks == 'true' && needs.build-artifacts.result == 'success'
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -593,6 +623,7 @@ jobs:
           node-version: "${{ matrix.node_version || '24.x' }}"
           cache-key-suffix: "${{ matrix.cache_key_suffix || 'node24' }}"
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Configure Node test resources
@@ -655,7 +686,7 @@ jobs:
     name: ${{ matrix.check_name }}
     needs: [preflight, build-artifacts]
     if: always() && needs.preflight.outputs.run_checks == 'true' && needs.build-artifacts.result == 'success'
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -673,6 +704,7 @@ jobs:
           node-version: "${{ matrix.node_version || '24.x' }}"
           cache-key-suffix: "${{ matrix.cache_key_suffix || 'node24' }}"
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Configure Node test resources
@@ -735,7 +767,7 @@ jobs:
     name: checks-node-core
     needs: [preflight, checks-node-core-test-shard]
     if: always() && needs.preflight.outputs.run_checks == 'true'
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Verify node test shards
@@ -751,7 +783,7 @@ jobs:
     name: "extension-fast"
     needs: [preflight]
     if: needs.preflight.outputs.run_extension_fast == 'true'
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -767,6 +799,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Run changed extension tests
@@ -779,7 +812,7 @@ jobs:
     name: "check"
     needs: [preflight]
     if: always() && needs.preflight.outputs.run_check == 'true'
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -792,6 +825,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Check types and lint and oxfmt
@@ -806,7 +840,7 @@ jobs:
     name: "check-additional"
     needs: [preflight]
     if: always() && needs.preflight.outputs.run_check_additional == 'true'
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -819,6 +853,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Run plugin extension boundary guard
@@ -1011,7 +1046,7 @@ jobs:
     name: "build-smoke"
     needs: [preflight, build-artifacts]
     if: always() && needs.preflight.outputs.run_build_smoke == 'true' && (github.event_name != 'push' || needs.build-artifacts.result == 'success')
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -1024,6 +1059,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Download dist artifact
@@ -1056,7 +1092,7 @@ jobs:
   check-docs:
     needs: [preflight]
     if: needs.preflight.outputs.run_check_docs == 'true'
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -1069,6 +1105,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Check docs
@@ -1077,7 +1114,7 @@ jobs:
   skills-python:
     needs: [preflight]
     if: needs.preflight.outputs.run_skills_python_job == 'true'
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -1106,7 +1143,7 @@ jobs:
     name: ${{ matrix.check_name }}
     needs: [preflight, build-artifacts]
     if: always() && needs.preflight.outputs.run_checks_windows == 'true' && needs.build-artifacts.result == 'success'
-    runs-on: blacksmith-32vcpu-windows-2025
+    runs-on: windows-2025
     timeout-minutes: 60
     env:
       NODE_OPTIONS: --max-old-space-size=6144
@@ -1237,6 +1274,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
 
       - name: Download dist artifact
         uses: actions/download-artifact@v8
@@ -1338,7 +1376,7 @@ jobs:
     name: ${{ matrix.check_name }}
     needs: [preflight]
     if: needs.preflight.outputs.run_android_job == 'true'
-    runs-on: blacksmith-16vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
       fail-fast: false
