@@ -121,3 +121,20 @@ The install-smoke preflight now treats pull requests that only change GitHub wor
 This remains a workflow-only CI reliability fix. No product runtime, provider, MT5/live execution, strategy runtime, Dockerfile, package manifest, lockfile, database/schema, release, or publish workflow files are changed.
 
 Implementation pending validation in 001P-J3.
+## K1 — GITHUB_OUTPUT-Safe Workflow/Docs Bypass Log
+
+The workflow/docs-only bypass correctly skipped the heavyweight Install Smoke Docker job, but the preflight manifest step failed because a human-readable log line was written inside the `$GITHUB_OUTPUT` block.
+
+The bypass message now redirects to stderr:
+
+- `echo "Workflow/docs-only PR; bypassing heavyweight install-smoke Docker job." >&2`
+
+The GitHub output file now receives only valid output records:
+
+- `docs_only=...`
+- `run_install_smoke=...`
+- `workflow_only_bypass=...`
+
+This remains a workflow-only CI reliability fix. No product runtime, Dockerfile, package manifest, lockfile, provider, MT5/live execution, strategy runtime, database/schema, release, or publish workflow files are changed.
+
+Implementation pending validation in 001P-K1.

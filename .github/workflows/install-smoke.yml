@@ -83,7 +83,7 @@ jobs:
               if [ -z "$workflow_non_bypass_files" ]; then
                 workflow_only_bypass=true
                 run_install_smoke=false
-                echo "Workflow/docs-only PR; bypassing heavyweight install-smoke Docker job."
+                echo "Workflow/docs-only PR; bypassing heavyweight install-smoke Docker job." >&2
               fi
             fi
             echo "docs_only=$docs_only"
