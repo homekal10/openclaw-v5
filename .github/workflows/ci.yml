@@ -125,6 +125,7 @@ jobs:
         env:
           OPENCLAW_CI_DOCS_ONLY: ${{ steps.docs_scope.outputs.docs_only }}
           OPENCLAW_CI_DOCS_CHANGED: ${{ steps.docs_scope.outputs.docs_changed }}
+          OPENCLAW_CI_BASE_SHA: ${{ github.event_name == 'push' && github.event.before || github.event.pull_request.base.sha }}
           OPENCLAW_CI_RUN_NODE: ${{ steps.changed_scope.outputs.run_node || 'false' }}
           OPENCLAW_CI_RUN_MACOS: ${{ steps.changed_scope.outputs.run_macos || 'false' }}
           OPENCLAW_CI_RUN_ANDROID: ${{ steps.changed_scope.outputs.run_android || 'false' }}
@@ -135,6 +136,7 @@ jobs:
           OPENCLAW_CI_CHANGED_EXTENSIONS_MATRIX: ${{ steps.changed_extensions.outputs.changed_extensions_matrix || '{"include":[]}' }}
         run: |
           node --input-type=module <<'EOF'
+          import { execFileSync } from "node:child_process";
           import { appendFileSync } from "node:fs";
           import {
             createNodeTestShards,
@@ -164,9 +166,34 @@ jobs:
           const outputPath = process.env.GITHUB_OUTPUT;
           const eventName = process.env.GITHUB_EVENT_NAME ?? "pull_request";
           const isPush = eventName === "push";
+          const changedPaths = (() => {
+            const base = process.env.OPENCLAW_CI_BASE_SHA;
+            if (!base) return [];
+
+            try {
+              return execFileSync("git", ["diff", "--name-only", base, "HEAD"], {
+                encoding: "utf8",
+              })
+                .split(/\r?\n/u)
+                .map((path) => path.trim())
+                .filter(Boolean);
+            } catch {
+              return [];
+            }
+          })();
+          const workflowHygieneOnly =
+            changedPaths.length > 0 &&
+            changedPaths.every(
+              (path) =>
+                path.startsWith(".github/workflows/") ||
+                path === "docs/OPENCLAW_SPRINT_001Q_CI_MAIN_HEALTH_RELEASE_HYGIENE.md",
+            );
           const docsOnly = parseBoolean(process.env.OPENCLAW_CI_DOCS_ONLY);
           const docsChanged = parseBoolean(process.env.OPENCLAW_CI_DOCS_CHANGED);
-          const runNode = parseBoolean(process.env.OPENCLAW_CI_RUN_NODE) && !docsOnly;
+          const runNode =
+            parseBoolean(process.env.OPENCLAW_CI_RUN_NODE) &&
+            !docsOnly &&
+            !workflowHygieneOnly;
           const runMacos = parseBoolean(process.env.OPENCLAW_CI_RUN_MACOS) && !docsOnly;
           const runAndroid = parseBoolean(process.env.OPENCLAW_CI_RUN_ANDROID) && !docsOnly;
           const runWindows = parseBoolean(process.env.OPENCLAW_CI_RUN_WINDOWS) && !docsOnly;
@@ -258,7 +285,7 @@ jobs:
             run_check: runNode,
             run_check_additional: runNode,
             run_build_smoke: runNode,
-            run_check_docs: docsChanged,
+            run_check_docs: docsChanged && !workflowHygieneOnly,
             run_control_ui_i18n: runControlUiI18n,
             run_skills_python_job: runSkillsPython,
             run_checks_windows: runWindows,
