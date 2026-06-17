@@ -455,6 +455,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Build dist
@@ -498,6 +499,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Run ${{ matrix.task }} (${{ matrix.runtime }})
@@ -542,6 +544,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Run extension shard
@@ -593,6 +596,7 @@ jobs:
           node-version: "${{ matrix.node_version || '24.x' }}"
           cache-key-suffix: "${{ matrix.cache_key_suffix || 'node24' }}"
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Configure Node test resources
@@ -673,6 +677,7 @@ jobs:
           node-version: "${{ matrix.node_version || '24.x' }}"
           cache-key-suffix: "${{ matrix.cache_key_suffix || 'node24' }}"
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Configure Node test resources
@@ -767,6 +772,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Run changed extension tests
@@ -792,6 +798,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Check types and lint and oxfmt
@@ -819,6 +826,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Run plugin extension boundary guard
@@ -1024,6 +1032,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Download dist artifact
@@ -1069,6 +1078,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
           use-sticky-disk: "false"
 
       - name: Check docs
@@ -1237,6 +1247,7 @@ jobs:
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
+          frozen-lockfile: "false"
 
       - name: Download dist artifact
         uses: actions/download-artifact@v8
